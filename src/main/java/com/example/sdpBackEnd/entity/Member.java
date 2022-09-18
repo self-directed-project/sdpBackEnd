@@ -10,7 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity{
-
+//public class Member extends BaseTiemEntity로 변경 후 repository test실행
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
