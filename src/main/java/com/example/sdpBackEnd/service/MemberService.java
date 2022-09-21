@@ -1,10 +1,14 @@
 package com.example.sdpBackEnd.service;
 
 import com.example.sdpBackEnd.dto.MemberRequestDto;
+import com.example.sdpBackEnd.entity.Member;
+import com.example.sdpBackEnd.excetion.CustomException;
+import com.example.sdpBackEnd.excetion.ErrorCode;
 import com.example.sdpBackEnd.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.transaction.Transactional;
 
@@ -13,19 +17,15 @@ import javax.transaction.Transactional;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    //추후에 spring security 적용
     @Transactional
-    public Long login(final MemberRequestDto param) {
-
-        try {
-            return memberRepository.findMember(param.getUsername(), param.getPassword())
-                    .getId();
-        } catch (Exception e) {
-            //에러-customException처리,errorcode생성,errorResponse 추가
-//            System.out.println("id와 password를 확인해주세요"); -테스트 진행시
-            return null;
+    public Member login(final MemberRequestDto param) {
+        //회원 username존재유무 검사
+        if (!memberRepository.existsByUsername(param.getUsername())) {
+            throw new CustomException(ErrorCode.POSTS_NOT_FOUND_ID);
         }
-
+        //회원 password 확인
+        return memberRepository.findByUsernameAndPassword(param.getUsername(), param.getPassword())
+                .orElseThrow(()->new CustomException(ErrorCode.POSTS_NOT_FOUND_PW));
 
     }
 }

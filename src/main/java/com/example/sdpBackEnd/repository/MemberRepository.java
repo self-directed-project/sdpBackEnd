@@ -6,8 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    @Query("select m from Member m where username = :username and password = :password")
-    Member findMember(@Param("username") String username, @Param("password") String password);
+
+
+   boolean existsByUsername(String username);
+
+    Optional<Member> findByUsernameAndPassword(String username,String password);
 }
