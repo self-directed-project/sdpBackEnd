@@ -7,9 +7,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ErrorCode {
+public enum StatusEnum {
 
 
+    //200 OK : 요청 성공
+    OK(HttpStatus.OK, "로그인 성공"),
      // 400 BAD_REQUEST: 잘못된 요청
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
 

@@ -1,23 +1,24 @@
 package com.example.sdpBackEnd.controller;
 
+import com.example.sdpBackEnd.dto.MemberResponseDto;
 import com.example.sdpBackEnd.dto.MemberRequestDto;
 import com.example.sdpBackEnd.entity.Member;
 import com.example.sdpBackEnd.excetion.CustomException;
-import com.example.sdpBackEnd.excetion.ErrorCode;
+import com.example.sdpBackEnd.excetion.StatusEnum;
 import com.example.sdpBackEnd.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.util.ObjectUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+
+import static com.example.sdpBackEnd.excetion.StatusEnum.OK;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,12 +29,29 @@ public class MemberController {
 
 
     @PostMapping("/login")
-    public String login(@Validated @RequestBody final MemberRequestDto memberRequestDto
-                      , BindingResult bindingResult, HttpServletRequest request) {
+    public ResponseEntity<MemberResponseDto> login(@Validated @RequestBody final MemberRequestDto memberRequestDto
+            , BindingResult bindingResult, HttpServletRequest request) {
 
         //DTO 유효성 실패 시 Exception처리
         if (bindingResult.hasErrors()) {
-            throw new CustomException(ErrorCode.BAD_REQUEST);
+            throw new CustomException(StatusEnum.BAD_REQUEST);
+        }
+
+        Member member= memberService.login(memberRequestDto);
+
+        //로그인 성공 시
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new MemberResponseDto(OK));
+    }
+    /*
+    @PostMapping("/login")
+    public String login(@Validated @RequestBody final MemberRequestDto memberRequestDto
+            , BindingResult bindingResult, HttpServletRequest request) {
+
+        //DTO 유효성 실패 시 Exception처리
+        if (bindingResult.hasErrors()) {
+            throw new CustomException(StatusEnum.BAD_REQUEST);
         }
 
         Member member= memberService.login(memberRequestDto);
@@ -45,8 +63,9 @@ public class MemberController {
 
         return "회원이름: "+member.getName()+"\t세션id: "+session.getId();
 
+    }*/
 
-    }
+
 
     //로그아웃
     public String logout(HttpServletRequest request) {
@@ -54,10 +73,9 @@ public class MemberController {
         HttpSession session = request.getSession(false);
 
         if (session != null) {
-            //세션초기화
-            session.invalidate();;
-        }
-        return "로그아웃 성공";
+            session.invalidate();
+            ;
+        }return "로그아웃 성공";
     }
     //회원 접근권한 부여
     public String HomeLogin(HttpServletRequest request) {

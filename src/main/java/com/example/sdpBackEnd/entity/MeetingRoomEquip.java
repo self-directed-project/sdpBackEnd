@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
+@Table(name="meetingRoomEquip")
 @Getter
 @Builder
 @AllArgsConstructor

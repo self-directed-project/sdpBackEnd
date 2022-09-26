@@ -5,11 +5,12 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
+@Table(name="team")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Team extends BaseEntity{
+public class Team extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

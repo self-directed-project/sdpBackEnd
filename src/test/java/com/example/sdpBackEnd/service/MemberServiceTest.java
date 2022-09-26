@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class MemberServiceTest {
-
+//test
     @Autowired
     private MemberService service;
     @Autowired
@@ -23,17 +23,13 @@ class MemberServiceTest {
     private Member m;
     @BeforeEach
     public void setup(){
-        m = memberRepository.save(Member.builder()
-                .password("1234")
-                .name("tsunami")
-                .username("ysm")
-                .build());
-        requestDto = new MemberRequestDto("tsunami", "ysm", "1234");
-        System.out.println(requestDto.getName());
+
+        requestDto = new MemberRequestDto("ysm", "1234");
+        System.out.println(requestDto.getUsername());
     }
 
     @Test
     void member_서비스() {
-        System.out.println(service.save(requestDto));
+        System.out.println(service.login(requestDto));
     }
 }
