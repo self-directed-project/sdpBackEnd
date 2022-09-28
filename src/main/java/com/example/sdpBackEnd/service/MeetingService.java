@@ -17,6 +17,7 @@ public class MeetingService {
     private MeetingRoom meetingRoom;
 
     //예약된 회의실 있는지 유무 체크
+
     public boolean meetingCheck(MeetingDto meetingDto){
         meetingCheck(meetingDto);
         return meetingRepository.existsByMeetingRoom(meetingRoom);
