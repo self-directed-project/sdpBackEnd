@@ -5,7 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name="meetingRoom")
+@Table(name ="meetingRoom")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -24,5 +24,4 @@ public class MeetingRoom extends BaseEntity{
 
     @Column(nullable = false)
     private int capacity;
-
 }
