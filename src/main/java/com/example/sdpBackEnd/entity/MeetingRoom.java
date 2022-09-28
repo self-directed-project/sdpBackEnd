@@ -24,4 +24,5 @@ public class MeetingRoom extends BaseEntity{
 
     @Column(nullable = false)
     private int capacity;
+
 }
