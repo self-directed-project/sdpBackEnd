@@ -4,7 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 @Entity
-@Table(name ="meetingMember")
+@Table(name="meetingMember")
 @Getter
 @Builder
 @AllArgsConstructor
