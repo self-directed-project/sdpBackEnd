@@ -1,4 +1,4 @@
-package com.example.sdpBackEnd.Controller;
+package com.example.sdpBackEnd.controller;
 
 
 import com.example.sdpBackEnd.service.MeetingService;

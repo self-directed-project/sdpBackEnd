@@ -1,4 +1,4 @@
-package com.example.sdpBackEnd.Domain;
+package com.example.sdpBackEnd.dto;
 
 import com.example.sdpBackEnd.entity.MeetingType;
 import lombok.*;

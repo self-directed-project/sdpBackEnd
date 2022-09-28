@@ -1,13 +1,12 @@
 package com.example.sdpBackEnd.service;
 
-import com.example.sdpBackEnd.Domain.MeetingDto;
+import com.example.sdpBackEnd.dto.MeetingDto;
 import com.example.sdpBackEnd.entity.Meeting;
 import com.example.sdpBackEnd.entity.MeetingRoom;
 import com.example.sdpBackEnd.repository.MeetingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
