@@ -10,7 +10,6 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor//테스트용
 public class MemberRequestDto {
 
 
@@ -19,5 +18,12 @@ public class MemberRequestDto {
 
     @NotBlank(message = "비밀번호 입력은 필수입니다.")
     private String password;
+
+    public Member ToEntity(){
+        return Member.builder()
+                .username(username)
+                .password(password)
+                .build();
+    }
 
 }

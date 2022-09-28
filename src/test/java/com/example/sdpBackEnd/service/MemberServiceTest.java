@@ -21,12 +21,12 @@ class MemberServiceTest {
     private MemberRepository memberRepository;
     private MemberRequestDto requestDto;
     private Member m;
-    @BeforeEach
+   /* @BeforeEach
     public void setup(){
 
         requestDto = new MemberRequestDto("ysm", "1234");
         System.out.println(requestDto.getUsername());
-    }
+    }*/
 
     @Test
     void member_서비스() {

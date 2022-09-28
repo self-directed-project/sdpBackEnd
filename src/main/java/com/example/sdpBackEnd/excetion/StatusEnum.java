@@ -14,6 +14,7 @@ public enum StatusEnum {
     OK(HttpStatus.OK, "로그인 성공"),
      // 400 BAD_REQUEST: 잘못된 요청
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    BAD_REQUEST_Session(HttpStatus.BAD_REQUEST, "잘못된 세션 요청."),
 
 
      // 404 NOT_FOUND: 리소스를 찾을 수 없음
