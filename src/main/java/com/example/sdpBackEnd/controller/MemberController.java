@@ -34,8 +34,11 @@ public class MemberController {
     public ResponseEntity<MemberResponseDto> login(@Validated @RequestBody final MemberRequestDto memberRequestDto
             , BindingResult bindingResult, HttpServletRequest request) {
 
+
         //DTO 유효성 실패Exception처리
         if (bindingResult.hasErrors()) {
+            System.out.println(memberRequestDto.getUsername());
+            System.out.println(memberRequestDto.getPassword());
             throw new CustomException(StatusEnum.BAD_REQUEST);
         }
 
@@ -45,6 +48,7 @@ public class MemberController {
         sessionManager.createSession(request,member);
 
         sessionManager.LoginSession(request);
+
 
         //세션 조회 성공 시
         if(sessionManager.LoginSession(request)){
