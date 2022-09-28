@@ -28,4 +28,10 @@ public class Member extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    @Builder
+    public Member(String username, String password) {
+        this.username=username;
+        this.password=password;
+    }
 }
