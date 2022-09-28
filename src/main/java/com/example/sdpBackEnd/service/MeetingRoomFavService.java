@@ -1,5 +1,6 @@
 package com.example.sdpBackEnd.service;
 
+import com.example.sdpBackEnd.dto.FavRoomDto;
 import com.example.sdpBackEnd.dto.MeetingRoomFavDto;
 import com.example.sdpBackEnd.entity.MeetingRoom;
 import com.example.sdpBackEnd.entity.MeetingRoomFav;
@@ -8,8 +9,12 @@ import com.example.sdpBackEnd.repository.MeetingRoomFavRepository;
 import com.example.sdpBackEnd.repository.MeetingRoomRepository;
 import com.example.sdpBackEnd.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,7 +46,7 @@ public class MeetingRoomFavService {
 
     // 회의실 즐겨찾기 테이블의 유무에 따라 테이블을 저장하거나 삭제하는
     public void favPost(MeetingRoomFavDto favDto){
-        long favId = getFav(favDto);
+
 
         if(!favCheck(favDto)){
             MeetingRoomFav meetingRoomFav = MeetingRoomFav.builder()
@@ -51,6 +56,7 @@ public class MeetingRoomFavService {
             meetingRoomFavRepository.save(meetingRoomFav);
         }
         else{
+            long favId = getFav(favDto);
             MeetingRoomFav meetingRoomFav = meetingRoomFavRepository.findById(favId).get();
             meetingRoomFavRepository.delete(meetingRoomFav);
         }
@@ -62,18 +68,31 @@ public class MeetingRoomFavService {
         Optional<Member> memberOptional = memberRepository.findById(favDto.getMemberId());
         Optional<MeetingRoom> meetingRoomOptional = meetingRoomRepository.findById((favDto.getMeetingRoomId()));
         if(memberOptional.isEmpty()){
-            //throw new
+            throw new IllegalArgumentException("해당 회원은 없습니다.");
         }
         else{
             member = memberOptional.get();
         }
 
         if(meetingRoomOptional.isEmpty()){
-            //throw new
+            throw new IllegalArgumentException("해당 회의실은 없습니다.");
         }
         else{
             meetingRoom = meetingRoomOptional.get();
         }
+    }
 
+    //즐겨찾기 한 회의실들을 FavRoomDto 형식으로 리스트 반환
+    public List<FavRoomDto> getFavMeetingRooms(MeetingRoomFavDto favDto){
+
+        PageRequest pageRequest = PageRequest.of(0,10);
+
+        Page<MeetingRoomFav> favPage = meetingRoomFavRepository.findByMemberId(favDto.getMemberId(),pageRequest);
+
+        Page<FavRoomDto> dtoPage = favPage.map(meetingRoomFav -> new FavRoomDto(meetingRoomFav.getMeetingRoom().getId(), meetingRoomRepository.findById(meetingRoomFav.getMeetingRoom().getId()).get().getName()));
+
+        List<FavRoomDto> favDtoList = dtoPage.getContent();
+
+        return favDtoList;
     }
 }
