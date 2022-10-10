@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -85,14 +86,37 @@ public class MeetingRoomFavService {
     //즐겨찾기 한 회의실들을 FavRoomDto 형식으로 리스트 반환
     public List<FavRoomDto> getFavMeetingRooms(MeetingRoomFavDto favDto){
 
-        PageRequest pageRequest = PageRequest.of(0,10);
+        /*PageRequest pageRequest = PageRequest.of(0,100);
 
         Page<MeetingRoomFav> favPage = meetingRoomFavRepository.findByMemberId(favDto.getMemberId(),pageRequest);
 
         Page<FavRoomDto> dtoPage = favPage.map(meetingRoomFav -> new FavRoomDto(meetingRoomFav.getMeetingRoom().getId(), meetingRoomRepository.findById(meetingRoomFav.getMeetingRoom().getId()).get().getName()));
 
-        List<FavRoomDto> favDtoList = dtoPage.getContent();
+        List<FavRoomDto> favDtoList = dtoPage.getContent();*/
+
+        List<FavRoomDto> favDtoList = meetingRoomFavRepository.findByMemberId(favDto.getMemberId()).stream()
+                .map(meetingRoomFav -> new FavRoomDto(meetingRoomFav.getMeetingRoom().getId(), meetingRoomRepository.findById(meetingRoomFav.getMeetingRoom().getId()).get().getName())).collect(Collectors.toList());
 
         return favDtoList;
+    }
+
+    public List<FavRoomDto> getNonFavMeetingRooms(MeetingRoomFavDto favDto){
+
+        List<MeetingRoom> allMeetingRooms = meetingRoomRepository.findAll();
+        List<MeetingRoomFav> favList = meetingRoomFavRepository.findByMemberId(favDto.getMemberId());
+
+        for(int i = 0; i< favList.size(); i++){
+            MeetingRoom favroom = meetingRoomRepository.findById(favList.get(i).getMeetingRoom().getId()).get();
+            if(allMeetingRooms.contains(favroom)){
+                allMeetingRooms.remove(favroom);
+            }
+        }
+
+        List<FavRoomDto> nonFavDtoList = allMeetingRooms.stream()
+                .map(meetingRoom -> new FavRoomDto(meetingRoom.getId(), meetingRoom.getName()))
+                .collect(Collectors.toList());
+
+        return nonFavDtoList;
+
     }
 }

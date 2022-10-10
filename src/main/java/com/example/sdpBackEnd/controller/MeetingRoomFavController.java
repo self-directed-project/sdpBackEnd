@@ -7,11 +7,11 @@ import com.example.sdpBackEnd.service.MeetingRoomFavService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/meeting-rooms")
@@ -26,14 +26,21 @@ public class MeetingRoomFavController {
 
         meetingRoomFavService.favPost(meetingRoomFavDto);
 
-        return new ResponseEntity<>(meetingRoomFavDto, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<FavRoomDto>> findMeetingRooms (@RequestBody MeetingRoomFavDto meetingRoomFavDto){
+    public ResponseEntity<Map<String, Object>> findMeetingRooms (@RequestBody MeetingRoomFavDto meetingRoomFavDto){
 
         List<FavRoomDto> favRoomDtoList = meetingRoomFavService.getFavMeetingRooms(meetingRoomFavDto);
+        List<FavRoomDto> nonFavRoomDtoList = meetingRoomFavService.getNonFavMeetingRooms(meetingRoomFavDto);
 
-        return new ResponseEntity<>(favRoomDtoList, HttpStatus.OK);
+        Map<String, Object> result = new HashMap<>();
+        result.put("fav",favRoomDtoList);
+        result.put("nonFav",nonFavRoomDtoList);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+
 }
