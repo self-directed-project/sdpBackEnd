@@ -30,7 +30,12 @@ public class MeetingRoomFavController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> findMeetingRooms (@RequestBody MeetingRoomFavDto meetingRoomFavDto){
+    public ResponseEntity<Map<String, Object>> findMeetingRooms (@RequestParam Long memberId,@RequestParam Long meetingRoomId){
+
+        MeetingRoomFavDto meetingRoomFavDto = MeetingRoomFavDto.builder()
+                .memberId(memberId)
+                .meetingRoomId(meetingRoomId)
+                .build();
 
         List<FavRoomDto> favRoomDtoList = meetingRoomFavService.getFavMeetingRooms(meetingRoomFavDto);
         List<FavRoomDto> nonFavRoomDtoList = meetingRoomFavService.getNonFavMeetingRooms(meetingRoomFavDto);
