@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -88,7 +89,9 @@ public class MeetingRoomFavService {
     public List<FavRoomDto> getFavMeetingRooms(MeetingRoomFavDto favDto){
 
         List<FavRoomDto> favDtoList = meetingRoomFavRepository.findByMemberId(favDto.getMemberId()).stream()
-                .map(meetingRoomFav -> new FavRoomDto(meetingRoomFav.getMeetingRoom().getId(), meetingRoomRepository.findById(meetingRoomFav.getMeetingRoom().getId()).get().getName())).collect(Collectors.toList());
+                .map(meetingRoomFav -> new FavRoomDto(meetingRoomFav.getMeetingRoom().getId(), meetingRoomRepository.findById(meetingRoomFav.getMeetingRoom().getId()).get().getName()))
+                .sorted(Comparator.comparing(FavRoomDto::getId))
+                .collect(Collectors.toList());
 
         return favDtoList;
     }
