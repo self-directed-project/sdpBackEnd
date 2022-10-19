@@ -14,8 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import static com.example.sdpBackEnd.excetion.StatusEnum.OK;
 import static com.example.sdpBackEnd.excetion.StatusEnum.SESSION_OK;
@@ -52,23 +50,12 @@ public class MemberController {
     public ResponseEntity<MemberResponseDto> logincheck( HttpServletRequest request) {
 
         //세션조회
-        sessionManager.LoginSession(request);
+        sessionManager.CheckSession(request);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(new MemberResponseDto(SESSION_OK));
 
     }
-
-  /*  @GetMapping("/")
-    public String homeLoginV3Spring(
-            @SessionAttribute(name = SESSION_COOKIE_NAME, required = false)Member loginMember,
-            HttpServletRequest request) {
-
-        if (loginMember == null) {
-            return "home";
-        }
-
-    }*/
 
 }
