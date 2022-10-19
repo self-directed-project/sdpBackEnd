@@ -32,7 +32,7 @@ public class MeetingRoomFavController {
     }*/
 
 
-    /*@PostMapping
+    @PostMapping
     public ResponseEntity<Map<String, Object>> fav(@RequestBody MeetingRoomFavDto meetingRoomFavDto){
 
         meetingRoomFavService.favPost(meetingRoomFavDto);
@@ -45,15 +45,15 @@ public class MeetingRoomFavController {
         result.put("nonFav",nonFavRoomDtoList);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
-    }*/
+    }
 
-    @PostMapping
+/*    @PostMapping
     public String fav(@RequestBody MeetingRoomFavDto meetingRoomFavDto){
 
         meetingRoomFavService.favPost(meetingRoomFavDto);
 
         return "meeting-rooms";
-    }
+    }*/
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> findMeetingRooms (@RequestParam Long memberId,@RequestParam Long meetingRoomId){
