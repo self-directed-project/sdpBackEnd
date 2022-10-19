@@ -1,5 +1,6 @@
 package com.example.sdpBackEnd.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,7 +18,9 @@ public class Meeting extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+//  @ManyToOne(fetch = FetchType.LAZY)
+//    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "meetingRoomId", nullable = false)
     private MeetingRoom meetingRoom;
 
