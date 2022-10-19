@@ -1,6 +1,7 @@
 package com.example.sdpBackEnd.service;
 
-import com.example.sdpBackEnd.dto.SessionUser;
+
+import com.example.sdpBackEnd.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
@@ -12,13 +13,18 @@ import java.util.Optional;
 @Component
 public class MemberAuditorAware implements AuditorAware<String> {
 
-    private final HttpSession httpSession;
+    public static final String SESSION_COOKIE_NAME = "mySessionId";
+    private final HttpSession session;
     @Override
     public Optional<String> getCurrentAuditor() {
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
-        if (user == null) {
+        Member loginMember = (Member) session.getAttribute(SESSION_COOKIE_NAME);
+
+        //조회기능 -sessionMange객체로 구현하기
+        if (loginMember == null) {
+            System.out.println("조회된 내용이 없습니다..");
             return null;
         }
-        return Optional.ofNullable(user.getName());
+        System.out.println("조회 성공");
+        return Optional.ofNullable(loginMember.getName());
     }
 }

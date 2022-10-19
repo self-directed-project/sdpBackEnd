@@ -1,22 +1,13 @@
 package com.example.sdpBackEnd.controller;
 
-import com.example.sdpBackEnd.dto.MemberRequestDto;
 import com.example.sdpBackEnd.entity.Member;
 import com.example.sdpBackEnd.excetion.CustomException;
 import com.example.sdpBackEnd.excetion.StatusEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Map;
 
 
 @Component
@@ -36,7 +27,7 @@ public class SessionManager {
 
 
     //유저의 session 조회 - 클라이언트 재접속 시
-    public void LoginSession(HttpServletRequest request) {
+    public void CheckSession(HttpServletRequest request) {
 
 
         HttpSession session = request.getSession(false);
