@@ -1,10 +1,14 @@
 package com.example.sdpBackEnd.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "meeting")
@@ -35,9 +39,15 @@ public class Meeting extends BaseEntity{
     private MeetingType meetingType;
 
     @Column(nullable = false)
+    @DateTimeFormat(pattern = "yy.MM.dd HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime start;
 
+
     @Column(nullable = false)
+    @DateTimeFormat(pattern = "yy.MM.dd HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime end;
+
 
 }

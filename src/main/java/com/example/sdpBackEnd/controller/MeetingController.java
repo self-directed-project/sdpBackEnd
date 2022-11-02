@@ -3,11 +3,11 @@ package com.example.sdpBackEnd.controller;
 
 import com.example.sdpBackEnd.dto.DateDto;
 import com.example.sdpBackEnd.dto.MeetingSearchDto;
+import com.example.sdpBackEnd.dto.MyMeetingDto;
 import com.example.sdpBackEnd.entity.Meeting;
 import com.example.sdpBackEnd.service.MeetingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,8 +41,13 @@ public class MeetingController {
 
     //미팅 기간 + 회의실 종류에 따라 찾아옴
     @PostMapping("/room")
-    public List<Meeting> findAllmeetingsRoom(@RequestBody MeetingSearchDto meetingSearchDto ){
+    public List<Meeting> findAllMeetingsRoom(@RequestBody MeetingSearchDto meetingSearchDto ){
         List<Meeting> meetings = meetingService.findMeetingInRoom(meetingSearchDto.getStart(), meetingSearchDto.getEnd(), meetingSearchDto.getId());
         return meetings;
     }
+//    @PostMapping("/mymeeting")
+//    public List<Meeting> findMyMeetings(@RequestBody MyMeetingDto myMeetingDto){
+//        List<Meeting> meetings = meetingService.findMyMeetingInName(myMeetingDto.getMembers());
+//        return meetings;
+//    }
 }
