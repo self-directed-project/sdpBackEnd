@@ -18,28 +18,18 @@ import java.util.Optional;
 public class MeetingService {
     private final MeetingRepository meetingRepository;
 
-    // 예약된 회의실 조회
+    //미팅 전체 조회
     public List<Meeting> findAllMeetings() {
         List<Meeting> meetings = new ArrayList<>();
         meetingRepository.findAll().forEach(meetings::add);
         return meetings;
     }
 
-    // 기간에 따라 예약된 회의실 조회
-    public List<Meeting> findMeetingInPeriod(LocalDateTime start, LocalDateTime end) {
-        List<Meeting> meetings = new ArrayList<>();
-        meetingRepository.findAllByStartGreaterThanEqualAndEndLessThanEqual(start, end).forEach(meetings::add);
-        return meetings;
-    }
-
+    //미팅 기간 + 회의실 종류에 따라 조회 (캘린더)
     public List<Meeting> findMeetingInRoom(LocalDateTime start, LocalDateTime end, long id){
         List<Meeting> meetings = new ArrayList<>();
         meetingRepository.findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(start,end,id).forEach(meetings::add);
         return meetings;
     }
 
-//    public List<MeetingMember> findMyMeetingInName(List<Member> members) {
-//        List<Meeting> meetings = new ArrayList<>();
-//        meetingRepository.findAllBy
-//    }
 }
