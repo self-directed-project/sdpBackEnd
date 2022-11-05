@@ -1,10 +1,9 @@
 package com.example.sdpBackEnd.service;
 
+import com.example.sdpBackEnd.dto.FavRoomDto;
+import com.example.sdpBackEnd.dto.MeetingRoomDto;
 import com.example.sdpBackEnd.dto.ReserveDto;
-import com.example.sdpBackEnd.entity.Meeting;
-import com.example.sdpBackEnd.entity.MeetingMember;
-import com.example.sdpBackEnd.entity.MeetingType;
-import com.example.sdpBackEnd.entity.Member;
+import com.example.sdpBackEnd.entity.*;
 import com.example.sdpBackEnd.repository.MeetingMemberRepository;
 import com.example.sdpBackEnd.repository.MeetingRepository;
 import com.example.sdpBackEnd.repository.MeetingRoomRepository;
@@ -13,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,9 +42,9 @@ public class ReserveMeetingService {
 
             meetingRepository.save(meeting);
 
-            for(int i=0; i<reserveDto.getMembers().size(); i++){
+            for(int i=0; i<reserveDto.getMembersId().size(); i++){
                 MeetingMember meetingMember = MeetingMember.builder()
-                        .member(reserveDto.getMembers().get(i))
+                        .member(memberRepository.findById(reserveDto.getMembersId().get(i)).get())
                         .meeting(meetingRepository.findByStart(reserveDto.getStart()).get())
                         .build();
 
@@ -53,12 +53,13 @@ public class ReserveMeetingService {
         }
     }
 
+    //회의 시간이 겹치는지 확인
     public Boolean checkTime(ReserveDto reserveDto){
         int j = 0;
 
-        List<LocalDateTime> startMeetings = meetingRepository.findAll().stream()
+        List<LocalDateTime> startMeetings = meetingRepository.findByMeetingRoom(meetingRoomRepository.findById(reserveDto.getMeetingRoomId()).get()).stream()
                 .map(Meeting::getStart).toList();
-        List<LocalDateTime> endMeetings = meetingRepository.findAll().stream()
+        List<LocalDateTime> endMeetings = meetingRepository.findByMeetingRoom(meetingRoomRepository.findById(reserveDto.getMeetingRoomId()).get()).stream()
                 .map(Meeting::getEnd).toList();
 
         LocalDateTime start = reserveDto.getStart();
@@ -77,4 +78,19 @@ public class ReserveMeetingService {
             return true;
     }
 
+
+    //존재하는 모든 회의실의 아이디와 이름 반환
+    public List<MeetingRoomDto> allMeetingRoom(){
+        List<MeetingRoom> allMeetingRooms = meetingRoomRepository.findAll();
+
+        List<MeetingRoomDto> meetingRoomList = allMeetingRooms.stream()
+                .map(meetingRoom -> new MeetingRoomDto(meetingRoom.getId(), meetingRoom.getName()))
+                .sorted(Comparator.comparing(MeetingRoomDto::getId))
+                .collect(Collectors.toList());
+
+        return meetingRoomList;
+    }
+
+
+    //검색된 이름을 포함하는 member 리스트 반환
 }

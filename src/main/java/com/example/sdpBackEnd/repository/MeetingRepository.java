@@ -16,7 +16,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     Boolean existsByMeetingRoom(MeetingRoom meetingRoom);
 
     //미팅룸 번호에 따라 예약된 미팅 정보 가져오기
-    Optional<Meeting> findMeetingByMeetingRoom(MeetingRoom meetingRoom);
+    Optional<Meeting> findByMeetingRoom(MeetingRoom meetingRoom);
 
     Optional<Meeting> findByStart(LocalDateTime start);
 

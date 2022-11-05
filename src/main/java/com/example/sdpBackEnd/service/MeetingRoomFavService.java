@@ -31,12 +31,14 @@ public class MeetingRoomFavService {
     private MeetingRoom meetingRoom;
 
     // 회의실 즐겨찾기 테이블이 존재하는지 확인하는
+    @Transactional
     public boolean favCheck(MeetingRoomFavDto favDto){
         checkMemberAndMeetingRoom(favDto);
         return meetingRoomFavRepository.existsByMemberAndMeetingRoom(member, meetingRoom);
     }
 
     // 회의실 즐겨찾기 테이블의 아이디를 가져오는
+    @Transactional
     public long getFav(MeetingRoomFavDto favDto){
 
         checkMemberAndMeetingRoom(favDto);
@@ -48,6 +50,7 @@ public class MeetingRoomFavService {
     }
 
     // 회의실 즐겨찾기 테이블의 유무에 따라 테이블을 저장하거나 삭제하는
+    @Transactional
     public void favPost(MeetingRoomFavDto favDto){
 
 
@@ -67,6 +70,7 @@ public class MeetingRoomFavService {
     }
 
     //멤버와 회의실의 id를 통해 객체를 만들어주는
+    @Transactional
     public void checkMemberAndMeetingRoom(MeetingRoomFavDto favDto){
         Optional<Member> memberOptional = memberRepository.findById(favDto.getMemberId());
         Optional<MeetingRoom> meetingRoomOptional = meetingRoomRepository.findById((favDto.getMeetingRoomId()));
@@ -86,6 +90,7 @@ public class MeetingRoomFavService {
     }
 
     //즐겨찾기 한 회의실들을 FavRoomDto 형식으로 리스트 반환
+    @Transactional
     public List<FavRoomDto> getFavMeetingRooms(MeetingRoomFavDto favDto){
 
         List<FavRoomDto> favDtoList = meetingRoomFavRepository.findByMemberId(favDto.getMemberId()).stream()
@@ -96,6 +101,8 @@ public class MeetingRoomFavService {
         return favDtoList;
     }
 
+    //즐겨찾기가 아닌 회의실을 리스트로 반환
+    @Transactional
     public List<FavRoomDto> getNonFavMeetingRooms(MeetingRoomFavDto favDto){
 
         List<MeetingRoom> allMeetingRooms = meetingRoomRepository.findAll();

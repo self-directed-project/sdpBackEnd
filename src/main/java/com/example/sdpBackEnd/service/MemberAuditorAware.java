@@ -1,4 +1,4 @@
-package com.example.sdpBackEnd.service;
+/*package com.example.sdpBackEnd.service;
 
 
 import com.example.sdpBackEnd.entity.Member;
@@ -27,4 +27,4 @@ public class MemberAuditorAware implements AuditorAware<String> {
         System.out.println("조회 성공");
         return Optional.ofNullable(loginMember.getName());
     }
-}
+}*/

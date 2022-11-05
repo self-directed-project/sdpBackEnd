@@ -15,7 +15,7 @@ public class ReserveDto {
 
     private String name;
 
-    private List<Member> members;
+    private List<Long> membersId;
 
     private long meetingRoomId;
 
