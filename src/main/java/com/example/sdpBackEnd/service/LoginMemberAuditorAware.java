@@ -9,14 +9,14 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
-public class LoginMemberAuditorAware implements AuditorAware<String> {
+public class LoginMemberAuditorAware implements AuditorAware<Long> {
 
     Member member = Member.builder()
             .id((long)1)
             .name("asd")
             .build();
     @Override
-    public Optional<String> getCurrentAuditor() {
-        return Optional.ofNullable(member.getName());
+    public Optional<Long> getCurrentAuditor() {
+        return Optional.ofNullable(member.getId());
     }
 }

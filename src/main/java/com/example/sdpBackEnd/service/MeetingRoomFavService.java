@@ -2,12 +2,8 @@ package com.example.sdpBackEnd.service;
 
 import com.example.sdpBackEnd.dto.FavRoomDto;
 import com.example.sdpBackEnd.dto.MeetingRoomFavDto;
-import com.example.sdpBackEnd.entity.MeetingRoom;
-import com.example.sdpBackEnd.entity.MeetingRoomFav;
-import com.example.sdpBackEnd.entity.Member;
-import com.example.sdpBackEnd.repository.MeetingRoomFavRepository;
-import com.example.sdpBackEnd.repository.MeetingRoomRepository;
-import com.example.sdpBackEnd.repository.MemberRepository;
+import com.example.sdpBackEnd.entity.*;
+import com.example.sdpBackEnd.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -66,7 +62,6 @@ public class MeetingRoomFavService {
             MeetingRoomFav meetingRoomFav = meetingRoomFavRepository.findById(favId).get();
             meetingRoomFavRepository.delete(meetingRoomFav);
         }
-
     }
 
     //멤버와 회의실의 id를 통해 객체를 만들어주는
@@ -121,6 +116,5 @@ public class MeetingRoomFavService {
                 .collect(Collectors.toList());
 
         return nonFavDtoList;
-
     }
 }

@@ -78,7 +78,6 @@ public class ReserveMeetingService {
             return true;
     }
 
-
     //존재하는 모든 회의실의 아이디와 이름 반환
     public List<MeetingRoomDto> allMeetingRoom(){
         List<MeetingRoom> allMeetingRooms = meetingRoomRepository.findAll();
@@ -91,6 +90,9 @@ public class ReserveMeetingService {
         return meetingRoomList;
     }
 
-
     //검색된 이름을 포함하는 member 리스트 반환
+    public List<Member> searchMember(String name) {
+        List<Member> memberList = memberRepository.findByNameContaining(name);
+        return memberList;
+    }
 }

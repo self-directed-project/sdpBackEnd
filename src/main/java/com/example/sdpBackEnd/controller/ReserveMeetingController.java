@@ -4,6 +4,7 @@ import com.example.sdpBackEnd.dto.MeetingRoomDto;
 import com.example.sdpBackEnd.dto.MeetingRoomFavDto;
 import com.example.sdpBackEnd.dto.ReserveDto;
 import com.example.sdpBackEnd.entity.MeetingType;
+import com.example.sdpBackEnd.entity.Member;
 import com.example.sdpBackEnd.service.ReserveMeetingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class ReserveMeetingController {
 
     private final ReserveMeetingService reserveMeetingService;
 
+    //회의 예약
     @PostMapping
     public ResponseEntity<ReserveDto> reserve(@RequestBody ReserveDto reserveDto){
 
@@ -29,6 +31,7 @@ public class ReserveMeetingController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //예약버튼 누를 시 회의실과 미팅타입 초기값 전달
     @GetMapping
     public ResponseEntity<Map<String, Object>> meetingRoomAndType(){
 
@@ -41,5 +44,13 @@ public class ReserveMeetingController {
         result.put("meetingType", meetingType.getEnumConstants());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    //이름 검색시 이름 포함하는 리스트 전달
+    @GetMapping("/search")
+    public ResponseEntity<List<Member>> searchMember(@RequestParam String name){
+        List<Member> searchList = reserveMeetingService.searchMember(name);
+
+        return new ResponseEntity<>(searchList, HttpStatus.OK);
     }
 }
