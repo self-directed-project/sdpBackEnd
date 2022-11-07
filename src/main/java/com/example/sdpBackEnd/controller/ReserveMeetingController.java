@@ -3,6 +3,7 @@ package com.example.sdpBackEnd.controller;
 import com.example.sdpBackEnd.dto.MeetingRoomDto;
 import com.example.sdpBackEnd.dto.MeetingRoomFavDto;
 import com.example.sdpBackEnd.dto.ReserveDto;
+import com.example.sdpBackEnd.dto.SearchMemberDto;
 import com.example.sdpBackEnd.entity.MeetingType;
 import com.example.sdpBackEnd.entity.Member;
 import com.example.sdpBackEnd.service.ReserveMeetingService;
@@ -48,8 +49,8 @@ public class ReserveMeetingController {
 
     //이름 검색시 이름 포함하는 리스트 전달
     @GetMapping("/search")
-    public ResponseEntity<List<Member>> searchMember(@RequestParam String name){
-        List<Member> searchList = reserveMeetingService.searchMember(name);
+    public ResponseEntity<List<SearchMemberDto>> searchMember(@RequestParam String name){
+        List<SearchMemberDto> searchList = reserveMeetingService.searchMember(name);
 
         return new ResponseEntity<>(searchList, HttpStatus.OK);
     }

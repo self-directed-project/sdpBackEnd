@@ -3,6 +3,7 @@ package com.example.sdpBackEnd.service;
 import com.example.sdpBackEnd.dto.FavRoomDto;
 import com.example.sdpBackEnd.dto.MeetingRoomDto;
 import com.example.sdpBackEnd.dto.ReserveDto;
+import com.example.sdpBackEnd.dto.SearchMemberDto;
 import com.example.sdpBackEnd.entity.*;
 import com.example.sdpBackEnd.repository.MeetingMemberRepository;
 import com.example.sdpBackEnd.repository.MeetingRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,8 +93,14 @@ public class ReserveMeetingService {
     }
 
     //검색된 이름을 포함하는 member 리스트 반환
-    public List<Member> searchMember(String name) {
+    public List<SearchMemberDto> searchMember(String name) {
         List<Member> memberList = memberRepository.findByNameContaining(name);
-        return memberList;
+
+        List<SearchMemberDto> memberDtoList = memberList.stream()
+                .map(member -> new SearchMemberDto(member.getId(), member.getName(), member.getUsername(), member.getTeam().getName()))
+                .sorted(Comparator.comparing(SearchMemberDto::getId))
+                .collect(Collectors.toList());
+
+        return memberDtoList;
     }
 }
