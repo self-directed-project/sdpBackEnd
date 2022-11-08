@@ -41,8 +41,11 @@ public class ReserveMeetingController {
         List<MeetingRoomDto> meetingRoomList = reserveMeetingService.allMeetingRoom();
         Class meetingType = MeetingType.class;
 
+        List<SearchMemberDto> searchMemberDtoList = reserveMeetingService.AllMembers();
+
         result.put("meetingRoomList", meetingRoomList);
         result.put("meetingType", meetingType.getEnumConstants());
+        result.put("memberList", searchMemberDtoList);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -53,5 +56,16 @@ public class ReserveMeetingController {
         List<SearchMemberDto> searchList = reserveMeetingService.searchMember(name);
 
         return new ResponseEntity<>(searchList, HttpStatus.OK);
+    }
+
+    //회의 삭제
+    @DeleteMapping("/delete")
+    public ResponseEntity<List<Long>> deleteMeeting(@RequestBody List<Long> meetingsId){
+
+        long id = (long)1;
+
+        reserveMeetingService.deleteMeeting(id, meetingsId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -102,5 +103,31 @@ public class ReserveMeetingService {
                 .collect(Collectors.toList());
 
         return memberDtoList;
+    }
+
+
+    public List<SearchMemberDto> AllMembers(){
+        List<Member> memberList = memberRepository.findAll();
+
+        List<SearchMemberDto> memberDtoList = memberList.stream()
+                .map(member -> new SearchMemberDto(member.getId(), member.getName(), member.getUsername(), member.getTeam().getName()))
+                .sorted(Comparator.comparing(SearchMemberDto::getId))
+                .collect(Collectors.toList());
+
+        return memberDtoList;
+    }
+
+    public void deleteMeeting(long memberId, List<Long> meetingsId){
+
+        List<Meeting> meetingList = meetingRepository.findAllById(meetingsId);
+
+        for(int i = 0; i<meetingList.size(); i++){
+            if(memberId==meetingList.get(i).getCreatedBy()){
+                meetingRepository.delete(meetingList.get(i));
+            }
+            else{
+                throw new IllegalArgumentException("권한이 없습니다.");
+            }
+        }
     }
 }
