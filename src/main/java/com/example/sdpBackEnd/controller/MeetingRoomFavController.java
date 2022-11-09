@@ -67,13 +67,12 @@ public class MeetingRoomFavController {
     }*/
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> findMeetingRooms (HttpServletRequest request, @RequestParam Long meetingRoomId){
+    public ResponseEntity<Map<String, Object>> findMeetingRooms (HttpServletRequest request){
 
         long memberId = sessionManager.CheckSession(request);
 
         MeetingRoomFavDto meetingRoomFavDto = MeetingRoomFavDto.builder()
                 .memberId(memberId)
-                .meetingRoomId(meetingRoomId)
                 .build();
 
         List<FavRoomDto> favRoomDtoList = meetingRoomFavService.getFavMeetingRooms(meetingRoomFavDto);
