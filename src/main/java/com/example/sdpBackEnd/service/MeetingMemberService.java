@@ -29,6 +29,7 @@ public class MeetingMemberService {
                 .map(meetingmember-> MeetingMemberDto.builder()
                         .name(meetingmember.getMeeting().getName())
                         .start(meetingmember.getMeeting().getStart())
+                        .end(meetingmember.getMeeting().getEnd())
                         .meetingRoomId(meetingmember.getMeeting().getMeetingRoom().getId())
                         .createdBy(meetingmember.getMeeting().getCreatedBy())
                         .build()

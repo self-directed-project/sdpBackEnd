@@ -30,6 +30,11 @@ public class SessionManager {
     public Long CheckSession(HttpServletRequest request) {
 
 
+        if (request==null){
+            System.out.println("request 받지 않음");
+            throw new CustomException(StatusEnum.BAD_REQUEST_Session_DOES_NOT_EXIST);
+        }
+
         HttpSession session = request.getSession(false);
 
         System.out.println(session.getId());
@@ -45,7 +50,7 @@ public class SessionManager {
             throw new CustomException(StatusEnum.GET_NOT_FOUND_SID);
         }
         System.out.println(loginMember.getName()+loginMember.getUsername());
-        System.out.println("/메인페이지로 이동\t" + loginMember.getId() + ":" + loginMember.getName() + "로그인 완료");
+        System.out.println("/요청페이지로 이동\t" + loginMember.getId() + ":" + loginMember.getName() + "\tloginCheck");
 
         return loginMember.getId();
     }
