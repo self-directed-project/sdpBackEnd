@@ -1,4 +1,3 @@
-/*
 package com.example.sdpBackEnd.service;
 
 
@@ -29,4 +28,3 @@ public class MemberAuditorAware implements AuditorAware<Long> {
         return Optional.ofNullable(loginMember.getId());
     }
 }
-*/

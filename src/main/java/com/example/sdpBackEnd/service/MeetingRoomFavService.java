@@ -5,9 +5,6 @@ import com.example.sdpBackEnd.dto.MeetingRoomFavDto;
 import com.example.sdpBackEnd.entity.*;
 import com.example.sdpBackEnd.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,8 +45,6 @@ public class MeetingRoomFavService {
     // 회의실 즐겨찾기 테이블의 유무에 따라 테이블을 저장하거나 삭제하는
     @Transactional
     public void favPost(MeetingRoomFavDto favDto){
-
-
         if(!favCheck(favDto)){
             MeetingRoomFav meetingRoomFav = MeetingRoomFav.builder()
                     .member(memberRepository.findById(favDto.getMemberId()).get())

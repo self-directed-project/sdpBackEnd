@@ -64,7 +64,7 @@ public class ReserveMeetingController {
 
         long id = (long)1;
 
-        reserveMeetingService.deleteMeeting(id, meetingsId);
+        reserveMeetingService.deleteMeetingList(id, meetingsId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
