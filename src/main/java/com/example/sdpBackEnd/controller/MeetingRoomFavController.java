@@ -3,6 +3,7 @@ package com.example.sdpBackEnd.controller;
 import com.example.sdpBackEnd.dto.FavRoomDto;
 import com.example.sdpBackEnd.dto.MeetingRoomFavDto;
 import com.example.sdpBackEnd.entity.MeetingRoom;
+import com.example.sdpBackEnd.entity.MeetingRoomFav;
 import com.example.sdpBackEnd.service.MeetingRoomFavService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,13 +37,13 @@ public class MeetingRoomFavController {
 
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> fav(HttpServletRequest request, @RequestParam Long meetingRoomId){
+    public ResponseEntity<Map<String, Object>> fav(HttpServletRequest request, @RequestBody MeetingRoomFavDto favDto){
 
         long memberId = sessionManager.CheckSession(request);
 
         MeetingRoomFavDto meetingRoomFavDto = MeetingRoomFavDto.builder()
                 .memberId(memberId)
-                .meetingRoomId(meetingRoomId)
+                .meetingRoomId(favDto.getMeetingRoomId())
                 .build();
 
         meetingRoomFavService.favPost(meetingRoomFavDto);
