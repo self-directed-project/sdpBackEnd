@@ -1,7 +1,10 @@
 package com.example.sdpBackEnd.dto;
 
+import com.example.sdpBackEnd.entity.Meeting;
 import com.example.sdpBackEnd.entity.MeetingType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 

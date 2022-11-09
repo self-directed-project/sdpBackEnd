@@ -2,6 +2,8 @@ package com.example.sdpBackEnd.repository;
 
 import com.example.sdpBackEnd.entity.Meeting;
 import com.example.sdpBackEnd.entity.MeetingRoom;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,19 +14,17 @@ import java.util.Optional;
 @Repository
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
-    //미팅룸 유무
-    Boolean existsByMeetingRoom(MeetingRoom meetingRoom);
-
-    //미팅룸 번호에 따라 예약된 미팅 정보 가져오기
-    Optional<Meeting> findByMeetingRoom(MeetingRoom meetingRoom);
-
     Optional<Meeting> findByStart(LocalDateTime start);
 
-    // MeetingRepository
-    List<Meeting> findAll();
+    //미팅 전체 조회
+    //List<Meeting> findAll();
 
-    List<Meeting> findAllByStartGreaterThanEqualAndEndLessThanEqual(LocalDateTime start, LocalDateTime end);
+    //start 순서별 미팅 전체 조회 (페이징처리)
+    Page<Meeting> findAllByOrderByStartDesc(Pageable pageable);
 
+    //미팅 기간 + 회의실 종류에 따라 조회 (캘린더)
     List<Meeting> findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(LocalDateTime start, LocalDateTime end, long id);
+
+
 
 }
