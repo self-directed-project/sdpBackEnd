@@ -2,6 +2,7 @@ package com.example.sdpBackEnd.repository;
 
 import com.example.sdpBackEnd.entity.Meeting;
 import com.example.sdpBackEnd.entity.MeetingMember;
+import com.example.sdpBackEnd.entity.MeetingRoomFav;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -28,13 +28,6 @@ public class SessionManager {
 
     //유저의 session 조회 - 클라이언트 재접속 시
     public Long CheckSession(HttpServletRequest request) {
-
-
-        if (request==null){
-            System.out.println("request 받지 않음");
-            throw new CustomException(StatusEnum.BAD_REQUEST_Session_DOES_NOT_EXIST);
-        }
-
         HttpSession session = request.getSession(false);
 
         System.out.println(session.getId());
@@ -54,6 +47,4 @@ public class SessionManager {
 
         return loginMember.getId();
     }
-
-
 }

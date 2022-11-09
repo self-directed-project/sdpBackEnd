@@ -5,12 +5,16 @@ import com.example.sdpBackEnd.dto.MeetingMemberDto;
 import com.example.sdpBackEnd.dto.MeetingMemberResponseDto;
 import com.example.sdpBackEnd.dto.MeetingResponseDto;
 import com.example.sdpBackEnd.dto.MeetingSearchDto;
+import com.example.sdpBackEnd.dto.*;
 import com.example.sdpBackEnd.entity.Meeting;
 import com.example.sdpBackEnd.entity.MeetingMember;
 import com.example.sdpBackEnd.service.MeetingMemberService;
 import com.example.sdpBackEnd.service.MeetingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +36,22 @@ public class MeetingController {
     private final SessionManager sessionManager;
 
     //미팅 전체 조회
+//    @GetMapping("/all")
+//    public ResponseEntity<MeetingResponseDto> findAllMeetings(HttpServletRequest request){
+//
+//        sessionManager.CheckSession(request);
+//
+//        List<Meeting> meetings = meetingService.findAllMeetings();
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(new MeetingResponseDto(MEETING_ALL_OK,meetings));
+//    }
+
+    // 미팅 전체 조회 페이징 처리
     @GetMapping("/all")
-    public ResponseEntity<MeetingResponseDto> findAllMeetings(HttpServletRequest request){
-
+    public ResponseEntity<MeetingResponseDto> _findAllMeetings(HttpServletRequest request, @PageableDefault(size=4) Pageable pageable){
         sessionManager.CheckSession(request);
-
-        List<Meeting> meetings = meetingService.findAllMeetings();
-
+        Page<Meeting> meetings = meetingService._findAll(pageable);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new MeetingResponseDto(MEETING_ALL_OK,meetings));
