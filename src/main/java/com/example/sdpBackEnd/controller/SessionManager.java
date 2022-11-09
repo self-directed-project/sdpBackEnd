@@ -27,8 +27,7 @@ public class SessionManager {
 
 
     //유저의 session 조회 - 클라이언트 재접속 시
-    public void CheckSession(HttpServletRequest request) {
-
+    public Long CheckSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
         System.out.println(session.getId());
@@ -44,6 +43,8 @@ public class SessionManager {
             throw new CustomException(StatusEnum.GET_NOT_FOUND_SID);
         }
         System.out.println(loginMember.getName()+loginMember.getUsername());
-        System.out.println("/메인페이지로 이동\t"+ loginMember.getName()+"로그인 완료");
+        System.out.println("/요청페이지로 이동\t" + loginMember.getId() + ":" + loginMember.getName() + "\tloginCheck");
+
+        return loginMember.getId();
     }
 }

@@ -1,8 +1,14 @@
 package com.example.sdpBackEnd.controller;
 
 
+import com.example.sdpBackEnd.dto.MeetingMemberDto;
+import com.example.sdpBackEnd.dto.MeetingMemberResponseDto;
+import com.example.sdpBackEnd.dto.MeetingResponseDto;
+import com.example.sdpBackEnd.dto.MeetingSearchDto;
 import com.example.sdpBackEnd.dto.*;
 import com.example.sdpBackEnd.entity.Meeting;
+import com.example.sdpBackEnd.entity.MeetingMember;
+import com.example.sdpBackEnd.service.MeetingMemberService;
 import com.example.sdpBackEnd.service.MeetingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static com.example.sdpBackEnd.excetion.StatusEnum.MEETING_ALL_OK;
+import static com.example.sdpBackEnd.excetion.StatusEnum.MEETING_My_OK;
 
 @RestController
 @RequestMapping("/meeting")
@@ -24,6 +31,8 @@ import static com.example.sdpBackEnd.excetion.StatusEnum.MEETING_ALL_OK;
 public class MeetingController {
     @Autowired
     private final MeetingService meetingService;
+    private final MeetingMemberService meetingMemberService;
+
     private final SessionManager sessionManager;
 
     //미팅 전체 조회
@@ -47,6 +56,20 @@ public class MeetingController {
                 .status(HttpStatus.OK)
                 .body(new MeetingResponseDto(MEETING_ALL_OK,meetings));
     }
+
+    //나의 미팅조회
+    @GetMapping("/mymeeting")
+    public ResponseEntity<MeetingMemberResponseDto> findMyMeetings(HttpServletRequest request){
+
+        Long memberId=sessionManager.CheckSession(request);
+
+        List<MeetingMemberDto> MyMeetings =meetingMemberService.findMyMeeting(memberId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new MeetingMemberResponseDto(MEETING_My_OK,MyMeetings));
+    }
+
 
     //미팅 기간 + 회의실 종류에 따라 조회 (캘린더)
     @PostMapping("/room")
