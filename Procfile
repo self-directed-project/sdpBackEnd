@@ -1,1 +1,1 @@
-web: java -jar build/libs/sdpBackEnd-0.0.1-SNAPSHOT.jar
+web: java -Dserver.port=$PORT -Dspring.profiles.active=production $JAVA_OPTS -jar "target/sdpBackEnd-0.0.1-SNAPSHOT.jar"

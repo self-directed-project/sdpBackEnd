@@ -47,7 +47,7 @@ public class MemberController {
     }
 
     @GetMapping("/main")
-    public ResponseEntity<MemberResponseDto> logincheck( HttpServletRequest request) {
+    public ResponseEntity<MemberResponseDto> logincheck(HttpServletRequest request) {
 
         //세션조회
         sessionManager.CheckSession(request);
@@ -57,5 +57,4 @@ public class MemberController {
                     .body(new MemberResponseDto(SESSION_OK));
 
     }
-
 }

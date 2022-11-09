@@ -29,7 +29,6 @@ public class SessionManager {
     //유저의 session 조회 - 클라이언트 재접속 시
     public void CheckSession(HttpServletRequest request) {
 
-
         HttpSession session = request.getSession(false);
 
         System.out.println(session.getId());
@@ -47,6 +46,4 @@ public class SessionManager {
         System.out.println(loginMember.getName()+loginMember.getUsername());
         System.out.println("/메인페이지로 이동\t"+ loginMember.getName()+"로그인 완료");
     }
-
-
 }
