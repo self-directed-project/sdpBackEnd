@@ -6,6 +6,7 @@ import com.example.sdpBackEnd.entity.MeetingMember;
 import com.example.sdpBackEnd.excetion.CustomException;
 import com.example.sdpBackEnd.excetion.StatusEnum;
 import com.example.sdpBackEnd.repository.MeetingMemberRepository;
+import com.example.sdpBackEnd.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,8 @@ public class MeetingMemberService {
 
     private final MeetingMemberRepository meetingMemberRepository;
 
+    private final MemberRepository memberRepository;
+
     public List<MeetingMemberDto>findMyMeeting(Long memberId){
 
         List<MeetingMemberDto> meetings =
@@ -31,7 +34,8 @@ public class MeetingMemberService {
                         .start(meetingmember.getMeeting().getStart())
                         .end(meetingmember.getMeeting().getEnd())
                         .meetingRoomId(meetingmember.getMeeting().getMeetingRoom().getId())
-                        .createdBy(meetingmember.getMeeting().getCreatedBy())
+                        .createdBy(memberRepository.findById(meetingmember.getMeeting().getCreatedBy()).get().getName())
+                        .type(meetingmember.getMeeting().getMeetingType().toString())
                         .build()
                 ).collect(Collectors.toList());
 

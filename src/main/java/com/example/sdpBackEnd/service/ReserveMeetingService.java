@@ -67,8 +67,8 @@ public class ReserveMeetingService {
         List<LocalDateTime> endMeetings = meetingRepository.findByMeetingRoom(meetingRoomRepository.findById(reserveDto.getMeetingRoomId()).get()).stream()
                 .map(Meeting::getEnd).toList();
 
-        LocalDateTime start = reserveDto.getStart();
-        LocalDateTime end = reserveDto.getEnd();
+        LocalDateTime start = reserveDto.getStart().plusMinutes(1);
+        LocalDateTime end = reserveDto.getEnd().minusMinutes(1);
 
         for(int i=0; i<startMeetings.size(); i++){
             if(startMeetings.get(i).isAfter(start) && startMeetings.get(i).isAfter(end) && endMeetings.get(i).isBefore(start) && endMeetings.get(i).isBefore(end))

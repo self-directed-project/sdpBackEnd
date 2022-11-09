@@ -21,6 +21,7 @@ public class MeetingMemberDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime end;
     private Long meetingRoomId;
+    private String type;
     private String createdBy;
 
 }

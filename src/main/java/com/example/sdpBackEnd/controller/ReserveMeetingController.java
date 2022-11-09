@@ -27,6 +27,8 @@ public class ReserveMeetingController {
     @PostMapping
     public ResponseEntity<ReserveDto> reserve(@RequestBody ReserveDto reserveDto){
 
+        System.out.println(reserveDto.getName()+"\n"+reserveDto.getDescription()+"\n"+reserveDto.getStart()+"\n"+reserveDto.getEnd()+"\n"+reserveDto.getType()+"\n"+reserveDto.getMeetingRoomId()+"\n"+reserveDto.getMembersId());
+
         reserveMeetingService.makeMeeting(reserveDto);
 
         return new ResponseEntity<>(HttpStatus.OK);

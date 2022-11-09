@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -21,6 +22,8 @@ import java.util.*;
 public class MeetingRoomFavController {
 
     private final MeetingRoomFavService meetingRoomFavService;
+
+    private final SessionManager sessionManager;
 
 
     /*@PostMapping
@@ -33,7 +36,14 @@ public class MeetingRoomFavController {
 
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> fav(@RequestBody MeetingRoomFavDto meetingRoomFavDto){
+    public ResponseEntity<Map<String, Object>> fav(HttpServletRequest request, @RequestParam Long meetingRoomId){
+
+        long memberId = sessionManager.CheckSession(request);
+
+        MeetingRoomFavDto meetingRoomFavDto = MeetingRoomFavDto.builder()
+                .memberId(memberId)
+                .meetingRoomId(meetingRoomId)
+                .build();
 
         meetingRoomFavService.favPost(meetingRoomFavDto);
 
@@ -56,7 +66,9 @@ public class MeetingRoomFavController {
     }*/
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> findMeetingRooms (@RequestParam Long memberId,@RequestParam Long meetingRoomId){
+    public ResponseEntity<Map<String, Object>> findMeetingRooms (HttpServletRequest request, @RequestParam Long meetingRoomId){
+
+        long memberId = sessionManager.CheckSession(request);
 
         MeetingRoomFavDto meetingRoomFavDto = MeetingRoomFavDto.builder()
                 .memberId(memberId)

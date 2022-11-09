@@ -28,23 +28,36 @@ public class SessionManager {
 
     //유저의 session 조회 - 클라이언트 재접속 시
     public Long CheckSession(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
 
-        System.out.println(session.getId());
 
-        if (session == null) {
+        if (request==null){
+            System.out.println("request 받지 않음");
+            throw new CustomException(StatusEnum.BAD_REQUEST_Session_DOES_NOT_EXIST);
+        }
+
+        try{
+            HttpSession session = request.getSession(false);
+
+            System.out.println(session.getId());
+
+            if (session == null) {
+                System.out.println("/브라우저에서 받은 세션이 없음 - 로그인페이지로 이동");
+                throw new CustomException(StatusEnum.BAD_REQUEST_Session_DOES_NOT_EXIST);
+            }
+
+            Member loginMember = (Member) session.getAttribute(SESSION_COOKIE_NAME);
+            if (loginMember == null) {
+                System.out.println("/등록된 세션이 없습니다."+session.getId()+"로그인페이지로 이동");
+                throw new CustomException(StatusEnum.GET_NOT_FOUND_SID);
+            }
+            System.out.println(loginMember.getName()+loginMember.getUsername());
+            System.out.println("/요청페이지로 이동\t" + loginMember.getId() + ":" + loginMember.getName() + "\tloginCheck");
+
+            return loginMember.getId();
+        }catch (Exception e){
             System.out.println("/브라우저에서 받은 세션이 없음 - 로그인페이지로 이동");
             throw new CustomException(StatusEnum.BAD_REQUEST_Session_DOES_NOT_EXIST);
         }
 
-        Member loginMember = (Member) session.getAttribute(SESSION_COOKIE_NAME);
-        if (loginMember == null) {
-            System.out.println("/등록된 세션이 없습니다."+session.getId()+"로그인페이지로 이동");
-            throw new CustomException(StatusEnum.GET_NOT_FOUND_SID);
-        }
-        System.out.println(loginMember.getName()+loginMember.getUsername());
-        System.out.println("/요청페이지로 이동\t" + loginMember.getId() + ":" + loginMember.getName() + "\tloginCheck");
-
-        return loginMember.getId();
     }
 }

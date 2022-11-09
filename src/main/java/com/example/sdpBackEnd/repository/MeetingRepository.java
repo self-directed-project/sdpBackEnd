@@ -25,6 +25,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     //미팅 기간 + 회의실 종류에 따라 조회 (캘린더)
     List<Meeting> findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(LocalDateTime start, LocalDateTime end, long id);
 
+    List<Meeting> findByMeetingRoom(MeetingRoom meetingRoom);
 
 
 }
