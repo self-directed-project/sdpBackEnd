@@ -71,10 +71,10 @@ public class ReserveMeetingService {
         LocalDateTime end = reserveDto.getEnd().minusMinutes(1);
 
         for(int i=0; i<startMeetings.size(); i++){
-            if(startMeetings.get(i).isAfter(start) && startMeetings.get(i).isAfter(end) && endMeetings.get(i).isBefore(start) && endMeetings.get(i).isBefore(end))
-                ;
-            else
+            if((startMeetings.get(i).isAfter(start)&&endMeetings.get(i).isBefore(start))||(startMeetings.get(i).isAfter(end)&&endMeetings.get(i).isBefore(end)))
                 j++;
+            else
+                ;
         }
 
         if(j!=0)

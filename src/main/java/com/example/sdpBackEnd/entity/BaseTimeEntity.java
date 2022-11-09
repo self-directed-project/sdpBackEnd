@@ -8,6 +8,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 @EntityListeners(AuditingEntityListener.class)
@@ -16,17 +18,22 @@ import javax.persistence.*;
 public class BaseTimeEntity {
 
     @CreatedDate
-    @Column(updatable = true, nullable = false)
-    @DateTimeFormat(pattern = "yy.MM.dd HH:mm")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd HH:mm", timezone = "Asia/Seoul")
+    @Column(updatable = false, nullable = false)
     private String createdDate;
-
 
     @LastModifiedDate
     @Column(nullable = true)
-    @DateTimeFormat(pattern = "yy.MM.dd HH:mm")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd HH:mm", timezone = "Asia/Seoul")
     private String lastModifiedDate;
 
+    @PrePersist
+    public void onPrePersist(){
+        this.createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+        this.lastModifiedDate = this.createdDate;
+    }
+
+    @PreUpdate
+    public void onPreUpdate(){
+        this.lastModifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+    }
 
 }

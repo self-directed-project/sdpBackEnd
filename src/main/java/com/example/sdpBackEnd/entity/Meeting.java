@@ -39,14 +39,10 @@ public class Meeting extends BaseEntity{
     private MeetingType meetingType;
 
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "yy.MM.dd HH:mm")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime start;
 
 
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "yy.MM.dd HH:mm")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime end;
 
 
