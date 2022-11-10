@@ -13,6 +13,7 @@ public class MeetingMemberDto {
 
 //    회의명/회의일시/회의실/개설자
 
+    private long meetingId;
     private String name;
     @DateTimeFormat(pattern = "yy.MM.dd HH:mm")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd HH:mm", timezone = "Asia/Seoul")
@@ -21,6 +22,7 @@ public class MeetingMemberDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime end;
     private Long meetingRoomId;
+    private String meetingRoomName;
     private String type;
     private String createdBy;
 

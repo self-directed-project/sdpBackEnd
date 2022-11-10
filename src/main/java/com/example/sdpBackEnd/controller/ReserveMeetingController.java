@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import java.util.Map;
 public class ReserveMeetingController {
 
     private final ReserveMeetingService reserveMeetingService;
+    private final SessionManager sessionManager;
 
     //회의 예약
     @PostMapping
@@ -61,10 +63,10 @@ public class ReserveMeetingController {
     }
 
     //회의 삭제
-    @DeleteMapping("/delete")
-    public ResponseEntity<List<Long>> deleteMeeting(@RequestBody List<Long> meetingsId){
+    @PostMapping("/delete")
+    public ResponseEntity<List<Long>> deleteMeeting(HttpServletRequest request, @RequestBody List<Long> meetingsId){
 
-        long id = (long)1;
+        long id = sessionManager.CheckSession(request);
 
         reserveMeetingService.deleteMeetingList(id, meetingsId);
 

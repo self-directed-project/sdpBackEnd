@@ -6,6 +6,7 @@ import com.example.sdpBackEnd.excetion.CustomException;
 import com.example.sdpBackEnd.excetion.StatusEnum;
 import com.example.sdpBackEnd.repository.MeetingMemberRepository;
 import com.example.sdpBackEnd.repository.MeetingRepository;
+import com.example.sdpBackEnd.repository.MeetingRoomRepository;
 import com.example.sdpBackEnd.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class MeetingService {
     private final MeetingRepository meetingRepository;
     private final MemberRepository memberRepository;
+    private final MeetingRoomRepository meetingRoomRepository;
 
     //미팅 전체 조회
 //    public List<Meeting> findAllMeetings() {
@@ -36,10 +38,12 @@ public class MeetingService {
         List<MeetingMemberDto> meetings =
                 meetingRepository.findAllByOrderByStartDesc(pageable).stream()
                         .map(meeting-> MeetingMemberDto.builder()
+                                .meetingId(meeting.getId())
                                 .name(meeting.getName())
                                 .start(meeting.getStart())
                                 .end(meeting.getEnd())
                                 .meetingRoomId(meeting.getMeetingRoom().getId())
+                                .meetingRoomName(meetingRoomRepository.findById(meeting.getMeetingRoom().getId()).get().getName())
                                 .createdBy(memberRepository.findById(meeting.getCreatedBy()).get().getName())
                                 .type(meeting.getMeetingType().toString())
                                 .build()

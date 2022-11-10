@@ -31,7 +31,10 @@ public class ReserveMeetingService {
     //reserveDto 값으로 회의 생성 및 회의 참여자 생성
     @Transactional
     public void makeMeeting(ReserveDto reserveDto){
-        if(!checkTime(reserveDto)){
+        if(!checkStart(reserveDto)){
+            throw new RuntimeException("끝나는 시간이 시작 시간보다 빠릅니다.");
+        }
+        else if(!checkTime(reserveDto)){
             throw new RuntimeException("다른 회의 시간과 중복됩니다.");
         }
         else{
@@ -78,6 +81,19 @@ public class ReserveMeetingService {
         }
 
         if(j!=0)
+            return false;
+        else
+            return true;
+    }
+
+    //끝 시간이 시작시간보다 빠른지 확인
+    @Transactional
+    public Boolean checkStart(ReserveDto reserveDto){
+
+        LocalDateTime start = reserveDto.getStart();
+        LocalDateTime end = reserveDto.getEnd();
+
+        if(end.isAfter(start))
             return false;
         else
             return true;
