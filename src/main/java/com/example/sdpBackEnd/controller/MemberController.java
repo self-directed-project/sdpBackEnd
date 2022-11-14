@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.example.sdpBackEnd.excetion.StatusEnum.OK;
-import static com.example.sdpBackEnd.excetion.StatusEnum.SESSION_OK;
+import static com.example.sdpBackEnd.excetion.StatusEnum.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,16 +45,15 @@ public class MemberController {
 
     }
 
-    @GetMapping("/main")
+    @GetMapping("/logout")
     public ResponseEntity<MemberResponseDto> logincheck(HttpServletRequest request) {
 
-
         //세션조회
-        sessionManager.CheckSession(request);
+        sessionManager.Logout(request);
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(new MemberResponseDto(SESSION_OK));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new MemberResponseDto(Logout_OK));
 
     }
 }
