@@ -169,4 +169,49 @@ public class ReserveMeetingService {
             }
         }
     }
+
+    //회의 수정
+    public void updateMeeting(long id, ReserveDto reserveDto){
+
+        Meeting meeting = meetingRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("회의가 없습니다."));
+
+        if(!checkStart(reserveDto)){
+            throw new RuntimeException("끝나는 시간이 시작 시간보다 빠릅니다.");
+        }
+        else if(!checkTime(reserveDto)){
+            throw new RuntimeException("다른 회의 시간과 중복됩니다.");
+        }
+        else{
+            Meeting buildMeeting = Meeting.builder()
+                    .id(meeting.getId())
+                    .name(reserveDto.getName())
+                    .meetingRoom(meetingRoomRepository.findById(reserveDto.getMeetingRoomId()).get())
+                    .meetingType(reserveDto.getType())
+                    .start(reserveDto.getStart())
+                    .end(reserveDto.getEnd())
+                    .description(reserveDto.getDescription())
+                    .build();
+
+            meetingRepository.save(buildMeeting);
+
+            List<MeetingMember> meetingMembers = meetingMemberRepository.findByMeetingId(meeting.getId());
+
+            for(int j=0; j<meetingMembers.size(); j++){
+                meetingMemberRepository.delete(meetingMembers.get(j));
+            }
+
+            for(int i=0; i<reserveDto.getMembersId().size(); i++){
+                MeetingMember meetingMember = MeetingMember.builder()
+                        .member(memberRepository.findById(reserveDto.getMembersId().get(i)).get())
+                        .meeting(meetingRepository.findByStart(reserveDto.getStart()).get())
+                        .build();
+
+                meetingMemberRepository.save(meetingMember);
+            }
+        }
+
+
+
+
+    }
 }
