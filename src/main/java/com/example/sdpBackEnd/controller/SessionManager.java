@@ -44,7 +44,7 @@ public class SessionManager {
 
     }
 
-    //로그아웃 - session기한 만료
+    //로그아웃 - session기한 만료!!
     public void Logout(HttpServletRequest request) {
 
         HttpSession session;
