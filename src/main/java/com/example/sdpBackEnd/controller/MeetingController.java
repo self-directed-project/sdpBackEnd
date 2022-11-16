@@ -35,17 +35,6 @@ public class MeetingController {
 
     private final SessionManager sessionManager;
 
-    //미팅 전체 조회
-//    @GetMapping("/all")
-//    public ResponseEntity<MeetingResponseDto> findAllMeetings(HttpServletRequest request){
-//
-//        sessionManager.CheckSession(request);
-//
-//        List<Meeting> meetings = meetingService.findAllMeetings();
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(new MeetingResponseDto(MEETING_ALL_OK,meetings));
-//    }
 
     // 미팅 전체 조회 페이징 처리
     @GetMapping("/all")
@@ -68,6 +57,12 @@ public class MeetingController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new MeetingMemberResponseDto(MEETING_My_OK,MyMeetings));
+    }
+
+    //전체미팅&나의미팅 - 상세페이지 조회
+    @GetMapping("/detailPage")
+    public void viewDetailPage(){
+
     }
 
 

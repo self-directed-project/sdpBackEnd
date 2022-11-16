@@ -6,6 +6,7 @@ import com.example.sdpBackEnd.entity.MeetingRoomFav;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,4 +14,5 @@ import java.util.Optional;
 public interface MeetingMemberRepository extends JpaRepository<MeetingMember, Long> {
 
     List<MeetingMember> findMeetingMemberByMemberId(Long memberId);
+    List<MeetingMember> findMeetingMemberByMeetingRoomIdANDStart(long meetingRoomId, LocalDateTime start);
 }
