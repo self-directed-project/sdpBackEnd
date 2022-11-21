@@ -7,7 +7,8 @@ import com.example.sdpBackEnd.dto.MeetingResponseDto;
 import com.example.sdpBackEnd.dto.MeetingSearchDto;
 import com.example.sdpBackEnd.dto.*;
 import com.example.sdpBackEnd.entity.Meeting;
-import com.example.sdpBackEnd.entity.MeetingMember;
+import com.example.sdpBackEnd.excetion.CustomException;
+import com.example.sdpBackEnd.excetion.StatusEnum;
 import com.example.sdpBackEnd.service.MeetingMemberService;
 import com.example.sdpBackEnd.service.MeetingService;
 import lombok.RequiredArgsConstructor;
@@ -17,23 +18,27 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.*;
 
 import static com.example.sdpBackEnd.excetion.StatusEnum.MEETING_ALL_OK;
 import static com.example.sdpBackEnd.excetion.StatusEnum.MEETING_My_OK;
 
 @RestController
-@RequestMapping("/meeting")
 @RequiredArgsConstructor
+@RequestMapping("/meeting")
 public class MeetingController {
     @Autowired
     private final MeetingService meetingService;
     private final MeetingMemberService meetingMemberService;
 
     private final SessionManager sessionManager;
+
+
 
 
     // 미팅 전체 조회 페이징 처리
@@ -61,7 +66,16 @@ public class MeetingController {
 
     //전체미팅&나의미팅 - 상세페이지 조회
     @GetMapping("/detailPage")
-    public void viewDetailPage(){
+    public  ResponseEntity<MeetingDetailRequestDto> viewDetailPage(@RequestParam String start,Long meetingRoomId) {
+
+
+        Map<String, List<String>> detail = meetingMemberService.viewdatailmeeting(meetingRoomId, start);
+
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new MeetingDetailRequestDto(MEETING_My_OK,detail));
+
 
     }
 
