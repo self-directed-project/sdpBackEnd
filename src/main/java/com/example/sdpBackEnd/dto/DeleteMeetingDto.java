@@ -2,13 +2,13 @@ package com.example.sdpBackEnd.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MeetingRoomDto {
+public class DeleteMeetingDto {
 
-    private long id;
-
-    private String name;
+    private List<Long> meetingsId;
 }

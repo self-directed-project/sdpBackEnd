@@ -142,16 +142,31 @@ public class ReserveMeetingService {
     @Transactional
     public void deleteMeetingList(long memberId, List<Long> meetingsId){
 
-        List<Meeting> meetingList = meetingRepository.findAllById(meetingsId);
+        List<Meeting> meetingList = meetingRepository.findAllByIdIn(meetingsId);
+        List<MeetingMember> meetingMembers = meetingMemberRepository.findAllByMeetingIdIn(meetingsId);
 
-        for(int i = 0; i<meetingList.size(); i++){
-            if(memberId==meetingList.get(i).getCreatedBy()){
-                meetingRepository.delete(meetingList.get(i));
+        for(int i = 0; i<meetingMembers.size(); i++){
+            if(memberId==meetingMembers.get(i).getCreatedBy()){
+                meetingMemberRepository.deleteById(meetingMembers.get(i).getId());  //여기 문제가 있는 것 같음
             }
             else{
                 throw new IllegalArgumentException("삭제 권한이 없습니다.");
             }
         }
+        System.out.println("Clear1");
+
+
+        for(int i = 0; i<meetingList.size(); i++){
+            if(memberId==meetingList.get(i).getCreatedBy()){
+                meetingRepository.deleteById(meetingList.get(i).getId()); //여기랑
+            }
+            else{
+                throw new IllegalArgumentException("삭제 권한이 없습니다.");
+            }
+        }
+        System.out.println("Clear2");
+
+
     }
 
     //회의 하나씩 삭제
@@ -197,7 +212,7 @@ public class ReserveMeetingService {
             List<MeetingMember> meetingMembers = meetingMemberRepository.findByMeetingId(meeting.getId());
 
             for(int j=0; j<meetingMembers.size(); j++){
-                meetingMemberRepository.delete(meetingMembers.get(j));
+                meetingMemberRepository.deleteById(meetingMembers.get(j).getId());
             }
 
             for(int i=0; i<reserveDto.getMembersId().size(); i++){
@@ -209,9 +224,5 @@ public class ReserveMeetingService {
                 meetingMemberRepository.save(meetingMember);
             }
         }
-
-
-
-
     }
 }
