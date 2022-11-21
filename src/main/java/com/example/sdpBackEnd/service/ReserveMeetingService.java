@@ -142,11 +142,21 @@ public class ReserveMeetingService {
     @Transactional
     public void deleteMeetingList(long memberId, List<Long> meetingsId){
 
-        List<Meeting> meetingList = meetingRepository.findAllById(meetingsId);
+        List<Meeting> meetingList = meetingRepository.findAllByIdIn(meetingsId);
+        List<MeetingMember> meetingMembers = meetingMemberRepository.findAllByMeetingIdIn(meetingsId);
+
+        for(int i = 0; i<meetingMembers.size(); i++){
+            if(memberId==meetingMembers.get(i).getCreatedBy()){
+                meetingMemberRepository.deleteById(meetingMembers.get(i).getId());
+            }
+            else{
+                throw new IllegalArgumentException("삭제 권한이 없습니다.");
+            }
+        }
 
         for(int i = 0; i<meetingList.size(); i++){
             if(memberId==meetingList.get(i).getCreatedBy()){
-                meetingRepository.delete(meetingList.get(i));
+                meetingRepository.deleteById(meetingList.get(i).getId());
             }
             else{
                 throw new IllegalArgumentException("삭제 권한이 없습니다.");
@@ -171,19 +181,38 @@ public class ReserveMeetingService {
     }
 
     //회의 수정
-    public void updateMeeting(long id, ReserveDto reserveDto){
+    @Transactional
+    public void updateMeeting(long memberId,long meetingId, ReserveDto reserveDto){
 
-        Meeting meeting = meetingRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("회의가 없습니다."));
+        Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(()-> new IllegalArgumentException("회의가 없습니다."));
 
-        if(!checkStart(reserveDto)){
+        if(meeting.getCreatedBy()!=memberId){
+            throw new RuntimeException("수정 권한이 없습니다.");
+        }
+        else if(!checkStart(reserveDto)){
             throw new RuntimeException("끝나는 시간이 시작 시간보다 빠릅니다.");
         }
         else if(!checkTime(reserveDto)){
             throw new RuntimeException("다른 회의 시간과 중복됩니다.");
         }
         else{
+            List<MeetingMember> meetingMembers = meetingMemberRepository.findByMeetingId(meeting.getId());
+
+            for(int j=0; j<meetingMembers.size(); j++){
+                meetingMemberRepository.deleteById(meetingMembers.get(j).getId());
+            }
+
+            for(int i=0; i<reserveDto.getMembersId().size(); i++){
+                MeetingMember meetingMember = MeetingMember.builder()
+                        .member(memberRepository.findById(reserveDto.getMembersId().get(i)).get())
+                        .meeting(meetingRepository.findById(meeting.getId()).get())
+                        .build();
+
+                meetingMemberRepository.save(meetingMember);
+            }
+
             Meeting buildMeeting = Meeting.builder()
-                    .id(meeting.getId())
+                    .id(meetingId)
                     .name(reserveDto.getName())
                     .meetingRoom(meetingRoomRepository.findById(reserveDto.getMeetingRoomId()).get())
                     .meetingType(reserveDto.getType())
@@ -193,25 +222,6 @@ public class ReserveMeetingService {
                     .build();
 
             meetingRepository.save(buildMeeting);
-
-            List<MeetingMember> meetingMembers = meetingMemberRepository.findByMeetingId(meeting.getId());
-
-            for(int j=0; j<meetingMembers.size(); j++){
-                meetingMemberRepository.delete(meetingMembers.get(j));
-            }
-
-            for(int i=0; i<reserveDto.getMembersId().size(); i++){
-                MeetingMember meetingMember = MeetingMember.builder()
-                        .member(memberRepository.findById(reserveDto.getMembersId().get(i)).get())
-                        .meeting(meetingRepository.findByStart(reserveDto.getStart()).get())
-                        .build();
-
-                meetingMemberRepository.save(meetingMember);
-            }
         }
-
-
-
-
     }
 }

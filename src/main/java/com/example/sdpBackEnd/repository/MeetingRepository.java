@@ -27,5 +27,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
     List<Meeting> findByMeetingRoom(MeetingRoom meetingRoom);
 
+    List<Meeting> findAllByIdIn(List<Long> id);
+
 
 }
