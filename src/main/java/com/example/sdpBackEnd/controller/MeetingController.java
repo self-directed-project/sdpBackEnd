@@ -52,6 +52,7 @@ public class MeetingController {
     public ResponseEntity<MeetingResponseDto> _findAllMeetings(HttpServletRequest request, @PageableDefault(size=4) Pageable pageable){
         sessionManager.CheckSession(request);
         Page<MeetingMemberDto> meetings = meetingService.findAll(pageable);
+        System.out.print(pageable);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new MeetingResponseDto(MEETING_ALL_OK,meetings));

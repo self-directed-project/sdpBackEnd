@@ -11,6 +11,7 @@ import com.example.sdpBackEnd.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class MeetingService {
 
     //미팅 전체 조회 (페이징처리)
     public Page<MeetingMemberDto> findAll(Pageable pageable) {
+//        Page<Meeting> p_meetings = meetingRepository.findAllByOrderByStartDesc(pageable);
         List<MeetingMemberDto> meetings =
                 meetingRepository.findAllByOrderByStartDesc(pageable).stream()
                         .map(meeting-> MeetingMemberDto.builder()
@@ -46,13 +48,20 @@ public class MeetingService {
                                 .meetingRoomName(meetingRoomRepository.findById(meeting.getMeetingRoom().getId()).get().getName())
                                 .createdBy(memberRepository.findById(meeting.getCreatedBy()).get().getName())
                                 .type(meeting.getMeetingType().toString())
-                                .build()
-                        ).collect(Collectors.toList());
+                                .build()).collect(Collectors.toList());
+//        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+//        int start = (int) pageRequest.getOffset();
+//        int end = Math.min((start + pageRequest.getPageSize()), meetings.size());
 
         if (meetings.isEmpty()) {
             throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
         }
-        return  new PageImpl<>(meetings);
+
+//        Page<MeetingMemberDto> meeting = new PageImpl<>(meetings.subList(start, end), pageRequest, meetings.size());
+//        return meeting;
+
+
+        return null;
     }
 
 
