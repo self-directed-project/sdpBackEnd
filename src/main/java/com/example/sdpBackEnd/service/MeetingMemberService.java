@@ -30,7 +30,7 @@ public class MeetingMemberService {
     private final MeetingRoomRepository meetingRoomRepository;
     private final MeetingRepository meetingRepository;
 
-    //
+    //나의예약 조회
     public List<MeetingMemberDto> findMyMeeting(Long memberId) {
 
         List<MeetingMemberDto> meetings =
@@ -56,13 +56,14 @@ public class MeetingMemberService {
     public Map<String, List<String>> viewdatailmeeting(
             @RequestParam long meetingRoomId,
             @RequestParam String start) {
+        String str="22.11.09 11:00";
 
         //참석자,회의내용
         Map<String, List<String>> detail = new HashMap<>();
         Optional<Meeting> m;
         List<String> nameList;
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy.MM.dd HH:mm");
         LocalDateTime datetime = LocalDateTime.parse(start, formatter);
 
         try{
@@ -79,7 +80,6 @@ public class MeetingMemberService {
         }catch (Exception e){
             throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
         }
-
 
 
         detail.put("nameList", nameList);

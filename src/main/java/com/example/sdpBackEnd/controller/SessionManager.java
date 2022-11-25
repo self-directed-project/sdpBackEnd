@@ -32,7 +32,7 @@ public class SessionManager {
 
         //받아온 세션이 없거나 등록된 세션이 아닌 경우
         try {
-            session = request.getSession(false);
+            session = request.getSession(true);
             System.out.println(session);
             loginMember = (Member) session.getAttribute(SESSION_COOKIE_NAME);
         } catch (Exception e) {

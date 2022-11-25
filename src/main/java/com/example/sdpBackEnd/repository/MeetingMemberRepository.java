@@ -17,8 +17,6 @@ public interface MeetingMemberRepository extends JpaRepository<MeetingMember, Lo
 
     List<MeetingMember> findMeetingMemberByMemberId(Long memberId);
 
-    /*@Query("select *from meeting where meeting_room_id='1 and start='2022-11-23 12:43:20.000000'")
-    List<Meeting> findMeeting();*/
     List<MeetingMember> findByMeetingId(Long id);
 
 

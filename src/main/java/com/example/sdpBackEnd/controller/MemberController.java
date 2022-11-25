@@ -50,6 +50,7 @@ public class MemberController {
     @GetMapping("/logout")
     public ResponseEntity<MemberResponseDto> logincheck(HttpServletRequest request) {
 
+
         //로그아웃 성공 시 - 세션 기간 만료설정
         sessionManager.Logout(request);
 
