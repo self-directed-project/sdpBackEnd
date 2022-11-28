@@ -3,6 +3,7 @@ package com.example.sdpBackEnd.service;
 import com.example.sdpBackEnd.dto.MeetingRoomDto;
 import com.example.sdpBackEnd.dto.ReserveDto;
 import com.example.sdpBackEnd.dto.SearchMemberDto;
+import com.example.sdpBackEnd.dto.UpdateMeetingDto;
 import com.example.sdpBackEnd.entity.*;
 import com.example.sdpBackEnd.repository.MeetingMemberRepository;
 import com.example.sdpBackEnd.repository.MeetingRepository;
@@ -222,6 +223,44 @@ public class ReserveMeetingService {
                     .build();
 
             meetingRepository.save(buildMeeting);
+        }
+    }
+
+    @Transactional
+    public List<SearchMemberDto> updateSearchMember(long meetingId){
+
+        List<MeetingMember> meetingMembers = meetingMemberRepository.findByMeetingId(meetingId);
+
+        List<Long> membersId = meetingMembers.stream().map(m -> m.getMember().getId()).collect(Collectors.toList());
+
+        List<Member> memberList = memberRepository.findAllById(membersId);
+
+        List<SearchMemberDto> memberDtoList = memberList.stream()
+                .map(member -> new SearchMemberDto(member.getId(), member.getName(), member.getUsername(), member.getTeam().getName()))
+                .sorted(Comparator.comparing(SearchMemberDto::getId))
+                .collect(Collectors.toList());
+
+        return memberDtoList;
+    }
+
+    @Transactional
+    public UpdateMeetingDto updateSearchMeeting(long memberId, long meetingId){
+        Meeting meeting = meetingRepository.findById(meetingId).get();
+
+        if(meeting.getCreatedBy() != memberId)
+            throw new RuntimeException("다른 회의 시간과 중복됩니다.");
+        else{
+            UpdateMeetingDto updateMeetingDto = UpdateMeetingDto.builder()
+                    .id(meeting.getId())
+                    .meetingRoom(meeting.getMeetingRoom().getId())
+                    .meetingType(meeting.getMeetingType())
+                    .description(meeting.getDescription())
+                    .name(meeting.getName())
+                    .end(meeting.getEnd())
+                    .start(meeting.getStart())
+                    .build();
+
+            return updateMeetingDto;
         }
     }
 }

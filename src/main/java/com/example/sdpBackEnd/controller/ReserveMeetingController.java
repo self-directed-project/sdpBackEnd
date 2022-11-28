@@ -91,4 +91,20 @@ public class ReserveMeetingController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/update")
+    public ResponseEntity<?> giveMeeting(HttpServletRequest request, @RequestParam long meetingId){
+
+        long memberId = sessionManager.CheckSession(request);
+
+        Map<String, Object> result = new HashMap<>();
+
+        List<SearchMemberDto> members = reserveMeetingService.updateSearchMember(meetingId);
+        UpdateMeetingDto meeting = reserveMeetingService.updateSearchMeeting(memberId, meetingId);
+
+        result.put("meeting", meeting);
+        result.put("members", members);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
