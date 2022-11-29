@@ -11,7 +11,6 @@ import com.example.sdpBackEnd.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +33,7 @@ public class MeetingService {
 //        return meetings;
 //    }
 
-    //미팅 리스트 조회
+    //전체 미팅 리스트 조회
     public List<MeetingMemberDto> findAll() {
 //        Page<Meeting> p_meetings = meetingRepository.findAllByOrderByStartDesc(pageable);
         List<MeetingMemberDto> meetings =
@@ -50,33 +49,27 @@ public class MeetingService {
                                 .type(meeting.getMeetingType().toString())
                                 .build()).collect(Collectors.toList());
 //        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-//        int start = (int) pageRequest.getOffset();
-//        int end = Math.min((start + pageRequest.getPageSize()), meetings.size());
 
-        if (meetings.isEmpty()) {
-            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
-        }
-
-//        Page<MeetingMemberDto> meeting = new PageImpl<>(meetings.subList(start, end), pageRequest, meetings.size());
+//        if (meetings.isEmpty()) {
+//            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+//        }
         return meetings;
     }
 
-    //미팅 전체 조회 (페이징처리)
+    //전체 미팅 조회 (페이징처리)
     public Page<MeetingMemberDto> p_FindAll(List<MeetingMemberDto> meetings, Pageable pageable) {
     int start = (int) pageable.getOffset();
     int end = Math.min((start + pageable.getPageSize()), meetings.size());
 
-        if (meetings.isEmpty()) {
-        throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
-    }
+//        if (meetings.isEmpty()) {
+//        throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+//    }
 
         if(start > meetings.size())
             return new PageImpl<>(new ArrayList<>(), pageable, meetings.size());
 
         return new PageImpl<>(meetings.subList(start, end), pageable, meetings.size());
     }
-
-
 
 
     //미팅 기간 + 회의실 종류에 따라 조회 (캘린더)

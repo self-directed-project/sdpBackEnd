@@ -8,6 +8,8 @@ import com.example.sdpBackEnd.dto.MeetingSearchDto;
 import com.example.sdpBackEnd.dto.*;
 import com.example.sdpBackEnd.entity.Meeting;
 import com.example.sdpBackEnd.entity.MeetingMember;
+import com.example.sdpBackEnd.excetion.CustomException;
+import com.example.sdpBackEnd.excetion.StatusEnum;
 import com.example.sdpBackEnd.service.MeetingMemberService;
 import com.example.sdpBackEnd.service.MeetingService;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +54,11 @@ public class MeetingController {
     public ResponseEntity<MeetingResponseDto> _findAllMeetings(HttpServletRequest request, @PageableDefault(size=4) Pageable pageable){
         sessionManager.CheckSession(request);
         List<MeetingMemberDto> meetings = meetingService.findAll();
+        System.out.println(meetings);
         Page<MeetingMemberDto> p_Meetings = meetingService.p_FindAll(meetings,pageable);
+        if (p_Meetings.isEmpty()){
+            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new MeetingResponseDto(MEETING_ALL_OK, p_Meetings));
@@ -66,7 +72,9 @@ public class MeetingController {
 
         List<MeetingMemberDto> myMeetings =meetingMemberService.findMyMeeting(memberId);
         Page<MeetingMemberDto> p_MyMeetings = meetingMemberService.p_FindMyMeeting(myMeetings,pageable);
-
+        if (p_MyMeetings.isEmpty()){
+            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new MeetingMemberResponseDto(MEETING_My_OK,p_MyMeetings));

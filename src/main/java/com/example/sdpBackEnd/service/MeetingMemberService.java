@@ -45,9 +45,9 @@ public class MeetingMemberService {
                         .build()
                 ).collect(Collectors.toList());
 
-        if (myMeetings.isEmpty()) {
-            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
-        }
+//        if (myMeetings.isEmpty()) {
+//            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+//        }
         return myMeetings;
     }
 
