@@ -34,11 +34,11 @@ public class MeetingService {
 //        return meetings;
 //    }
 
-    //미팅 전체 조회 (페이징처리)
-    public Page<MeetingMemberDto> findAll(Pageable pageable) {
+    //미팅 리스트 조회
+    public List<MeetingMemberDto> findAll() {
 //        Page<Meeting> p_meetings = meetingRepository.findAllByOrderByStartDesc(pageable);
         List<MeetingMemberDto> meetings =
-                meetingRepository.findAllByOrderByStartDesc(pageable).stream()
+                meetingRepository.findAllByOrderByStartDesc().stream()
                         .map(meeting-> MeetingMemberDto.builder()
                                 .meetingId(meeting.getId())
                                 .name(meeting.getName())
@@ -58,11 +58,24 @@ public class MeetingService {
         }
 
 //        Page<MeetingMemberDto> meeting = new PageImpl<>(meetings.subList(start, end), pageRequest, meetings.size());
-//        return meeting;
-
-
-        return null;
+        return meetings;
     }
+
+    //미팅 전체 조회 (페이징처리)
+    public Page<MeetingMemberDto> p_FindAll(List<MeetingMemberDto> meetings, Pageable pageable) {
+    int start = (int) pageable.getOffset();
+    int end = Math.min((start + pageable.getPageSize()), meetings.size());
+
+        if (meetings.isEmpty()) {
+        throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+    }
+
+        if(start > meetings.size())
+            return new PageImpl<>(new ArrayList<>(), pageable, meetings.size());
+
+        return new PageImpl<>(meetings.subList(start, end), pageable, meetings.size());
+    }
+
 
 
 
@@ -72,6 +85,7 @@ public class MeetingService {
         meetingRepository.findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(start,end,id).forEach(meetings::add);
         return meetings;
     }
+
 
 
 }

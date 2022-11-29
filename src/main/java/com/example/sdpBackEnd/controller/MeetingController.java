@@ -47,28 +47,29 @@ public class MeetingController {
 //                .body(new MeetingResponseDto(MEETING_ALL_OK,meetings));
 //    }
 
-    // 미팅 전체 조회 페이징 처리
+    // 미팅 전체 조회 페이징 처리 (?page=0&size=4)
     @GetMapping("/all")
     public ResponseEntity<MeetingResponseDto> _findAllMeetings(HttpServletRequest request, @PageableDefault(size=4) Pageable pageable){
         sessionManager.CheckSession(request);
-        Page<MeetingMemberDto> meetings = meetingService.findAll(pageable);
-        System.out.print(pageable);
+        List<MeetingMemberDto> meetings = meetingService.findAll();
+        Page<MeetingMemberDto> p_Meetings = meetingService.p_FindAll(meetings,pageable);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new MeetingResponseDto(MEETING_ALL_OK,meetings));
+                .body(new MeetingResponseDto(MEETING_ALL_OK, p_Meetings));
     }
 
     //나의 미팅조회
     @GetMapping("/mymeeting")
-    public ResponseEntity<MeetingMemberResponseDto> findMyMeetings(HttpServletRequest request){
+    public ResponseEntity<MeetingMemberResponseDto> findMyMeetings(HttpServletRequest request, @PageableDefault(size=4) Pageable pageable){
 
         Long memberId=sessionManager.CheckSession(request);
 
-        List<MeetingMemberDto> MyMeetings =meetingMemberService.findMyMeeting(memberId);
+        List<MeetingMemberDto> myMeetings =meetingMemberService.findMyMeeting(memberId);
+        Page<MeetingMemberDto> p_MyMeetings = meetingMemberService.p_FindMyMeeting(myMeetings,pageable);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new MeetingMemberResponseDto(MEETING_My_OK,MyMeetings));
+                .body(new MeetingMemberResponseDto(MEETING_My_OK,p_MyMeetings));
     }
 
 
