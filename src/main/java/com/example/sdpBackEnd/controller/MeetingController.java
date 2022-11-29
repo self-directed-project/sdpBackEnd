@@ -77,5 +77,4 @@ public class MeetingController {
         List<Meeting> meetings = meetingService.findMeetingInRoom(meetingSearchDto.getStart(), meetingSearchDto.getEnd(), meetingSearchDto.getId());
         return meetings;
     }
-
 }

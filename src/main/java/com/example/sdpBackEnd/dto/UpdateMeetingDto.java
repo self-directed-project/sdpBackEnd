@@ -22,12 +22,28 @@ public class UpdateMeetingDto {
 
     private MeetingType meetingType;
 
-    @DateTimeFormat(pattern = "yy.MM.dd HH:mm")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd HH:mm", timezone = "Asia/Seoul")
-    private LocalDateTime start;
+    @DateTimeFormat(pattern = "yy.MM.dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd", timezone = "Asia/Seoul")
+    private LocalDateTime startDate;
 
-    @DateTimeFormat(pattern = "yy.MM.dd HH:mm")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd HH:mm", timezone = "Asia/Seoul")
-    private LocalDateTime end;
+    @DateTimeFormat(pattern = "HH")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH", timezone = "Asia/Seoul")
+    private LocalDateTime startHour;
+
+    @DateTimeFormat(pattern = "mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "mm", timezone = "Asia/Seoul")
+    private LocalDateTime startMinute;
+
+    @DateTimeFormat(pattern = "yy.MM.dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd", timezone = "Asia/Seoul")
+    private LocalDateTime endDate;
+
+    @DateTimeFormat(pattern = "HH")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH", timezone = "Asia/Seoul")
+    private LocalDateTime endHour;
+
+    @DateTimeFormat(pattern = "mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "mm", timezone = "Asia/Seoul")
+    private LocalDateTime endMinute;
 
 }

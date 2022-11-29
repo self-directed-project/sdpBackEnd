@@ -248,7 +248,7 @@ public class ReserveMeetingService {
         Meeting meeting = meetingRepository.findById(meetingId).get();
 
         if(meeting.getCreatedBy() != memberId)
-            throw new RuntimeException("다른 회의 시간과 중복됩니다.");
+            throw new RuntimeException("수정 권한이 없습니다.");
         else{
             UpdateMeetingDto updateMeetingDto = UpdateMeetingDto.builder()
                     .id(meeting.getId())
@@ -256,8 +256,12 @@ public class ReserveMeetingService {
                     .meetingType(meeting.getMeetingType())
                     .description(meeting.getDescription())
                     .name(meeting.getName())
-                    .end(meeting.getEnd())
-                    .start(meeting.getStart())
+                    .endDate(meeting.getEnd())
+                    .endHour(meeting.getEnd())
+                    .endMinute(meeting.getEnd())
+                    .startDate(meeting.getStart())
+                    .startHour(meeting.getStart())
+                    .startMinute(meeting.getStart())
                     .build();
 
             return updateMeetingDto;
