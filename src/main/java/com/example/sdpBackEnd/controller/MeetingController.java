@@ -53,24 +53,26 @@ public class MeetingController {
 
     //나의 미팅조회
     @GetMapping("/mymeeting")
-    public ResponseEntity<MeetingMemberResponseDto> findMyMeetings(HttpServletRequest request){
+    public ResponseEntity<MeetingMemberResponseDto> findMyMeetings(HttpServletRequest request, @PageableDefault(size=4) Pageable pageable){
 
         Long memberId=sessionManager.CheckSession(request);
 
-        List<MeetingMemberDto> MyMeetings =meetingMemberService.findMyMeeting(memberId);
-
+        List<MeetingMemberDto> myMeetings =meetingMemberService.findMyMeeting(memberId);
+        Page<MeetingMemberDto> p_MyMeetings = meetingMemberService.p_FindMyMeeting(myMeetings,pageable);
+        if (p_MyMeetings.isEmpty()){
+            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new MeetingMemberResponseDto(MEETING_My_OK,MyMeetings));
+                .body(new MeetingMemberResponseDto(MEETING_My_OK,p_MyMeetings));
     }
+
 
     //전체미팅&나의미팅 - 상세페이지 조회
     @GetMapping("/detailPage")
-    public  ResponseEntity<MeetingDetailRequestDto> viewDetailPage(@RequestParam String start,Long meetingRoomId) {
+    public  ResponseEntity<MeetingDetailRequestDto> viewDetailPage(@RequestParam Long meetingId) {
 
-
-        Map<String, List<String>> detail = meetingMemberService.viewdatailmeeting(meetingRoomId, start);
-
+        Map<String, List<String>> detail = meetingMemberService.viewdatailmeeting(meetingId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

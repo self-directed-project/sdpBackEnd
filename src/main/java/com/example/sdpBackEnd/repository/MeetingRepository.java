@@ -28,8 +28,8 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
 
     List<Meeting> findByMeetingRoom(MeetingRoom meetingRoom);
 
-    Optional<Meeting> findByMeetingRoomId(Long meetingRoomId);
-    Optional<Meeting> findByMeetingRoomIdAndStart(Long meetingRoomId,LocalDateTime start);
+    Optional<Meeting> findById(Long id);
+
 
 
 

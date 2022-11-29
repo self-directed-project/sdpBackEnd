@@ -11,6 +11,9 @@ import com.example.sdpBackEnd.repository.MeetingRepository;
 import com.example.sdpBackEnd.repository.MeetingRoomRepository;
 import com.example.sdpBackEnd.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -45,7 +48,8 @@ public class MeetingMemberService {
                                 .createdBy(memberRepository.findById(meetingmember.getMeeting().getCreatedBy()).get().getName())
                                 .type(meetingmember.getMeeting().getMeetingType().toString())
                                 .build()
-                        ).collect(Collectors.toList());
+                        ).sorted(Comparator.comparing(MeetingMemberDto::getStart).reversed())
+                        .collect(Collectors.toList());
 
         if (meetings.isEmpty()) {
             throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
@@ -53,27 +57,33 @@ public class MeetingMemberService {
         return meetings;
     }
 
-    public Map<String, List<String>> viewdatailmeeting(
-            @RequestParam long meetingRoomId,
-            @RequestParam String start) {
-        String str="22.11.09 11:00";
+    //나의 미팅 조회 (페이징처리)
+    public Page<MeetingMemberDto> p_FindMyMeeting(List<MeetingMemberDto> myMeetings, Pageable pageable) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), myMeetings.size());
+
+        if(start > myMeetings.size())
+            return new PageImpl<>(new ArrayList<>(), pageable, myMeetings.size());
+
+        return new PageImpl<>(myMeetings.subList(start, end), pageable, myMeetings.size());
+    }
+
+    public Map<String, List<String>> viewdatailmeeting(long meetingId) {
 
         //참석자,회의내용
         Map<String, List<String>> detail = new HashMap<>();
         Optional<Meeting> m;
         List<String> nameList;
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy.MM.dd HH:mm");
-        LocalDateTime datetime = LocalDateTime.parse(start, formatter);
-
         try{
-             m=meetingRepository.findByMeetingRoomIdAndStart(meetingRoomId,datetime);
+             m=meetingRepository.findById(meetingId);
         }catch (Exception e){
             throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
         }
         List<String> descript = Arrays.asList(m.get().getDescription());
+
         try{
-            nameList= meetingMemberRepository.findByMeetingId(m.get().getId())
+            nameList= meetingMemberRepository.findByMeetingId(meetingId)
                     .stream()
                     .map(meetingMember ->meetingMember.getMember().getName()
                     ).collect(Collectors.toList());
