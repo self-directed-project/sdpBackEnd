@@ -70,7 +70,7 @@ public class ReserveMeetingController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<?> updateMeeting(HttpServletRequest request, @RequestBody UpdateDto updateDto){
 
         long memberId = sessionManager.CheckSession(request);
