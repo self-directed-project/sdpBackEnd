@@ -17,10 +17,13 @@ public class MemberAuditorAware implements AuditorAware<Long> {
     private final HttpSession session;
     @Override
     public Optional<Long> getCurrentAuditor() {
-        Member loginMember = (Member) session.getAttribute(SESSION_COOKIE_NAME);
 
-        //조회기능 -sessionMange객체로 구현하기
-        if (loginMember == null) {
+
+        Member loginMember ;
+        //loginMember ==null
+        try{
+            loginMember = (Member) session.getAttribute(SESSION_COOKIE_NAME);
+        }catch (Exception e){
             System.out.println("조회된 내용이 없습니다..");
             return null;
         }

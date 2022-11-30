@@ -1,5 +1,6 @@
 package com.example.sdpBackEnd.service;
 
+import com.example.sdpBackEnd.dto.CalendarMeetingDto;
 import com.example.sdpBackEnd.dto.MeetingMemberDto;
 import com.example.sdpBackEnd.entity.Meeting;
 import com.example.sdpBackEnd.excetion.CustomException;
@@ -33,10 +34,11 @@ public class MeetingService {
 //        return meetings;
 //    }
 
-    //미팅 전체 조회 (페이징처리)
-    public Page<MeetingMemberDto> findAll(Pageable pageable) {
+    //전체 미팅 리스트 조회
+    public List<MeetingMemberDto> findAll() {
+//        Page<Meeting> p_meetings = meetingRepository.findAllByOrderByStartDesc(pageable);
         List<MeetingMemberDto> meetings =
-                meetingRepository.findAllByOrderByStartDesc(pageable).stream()
+                meetingRepository.findAllByOrderByStartDesc().stream()
                         .map(meeting-> MeetingMemberDto.builder()
                                 .meetingId(meeting.getId())
                                 .name(meeting.getName())
@@ -46,23 +48,47 @@ public class MeetingService {
                                 .meetingRoomName(meetingRoomRepository.findById(meeting.getMeetingRoom().getId()).get().getName())
                                 .createdBy(memberRepository.findById(meeting.getCreatedBy()).get().getName())
                                 .type(meeting.getMeetingType().toString())
-                                .build()
-                        ).collect(Collectors.toList());
+                                .build()).collect(Collectors.toList());
+//        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
 
-        if (meetings.isEmpty()) {
-            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
-        }
-        return  new PageImpl<>(meetings);
-    }
-
-
-
-    //미팅 기간 + 회의실 종류에 따라 조회 (캘린더)
-    public List<Meeting> findMeetingInRoom(LocalDateTime start, LocalDateTime end, long id){
-        List<Meeting> meetings = new ArrayList<>();
-        meetingRepository.findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(start,end,id).forEach(meetings::add);
+//        if (meetings.isEmpty()) {
+//            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+//        }
         return meetings;
     }
 
+    //전체 미팅 조회 (페이징처리)
+    public Page<MeetingMemberDto> p_FindAll(List<MeetingMemberDto> meetings, Pageable pageable) {
+    int start = (int) pageable.getOffset();
+    int end = Math.min((start + pageable.getPageSize()), meetings.size());
+
+//        if (meetings.isEmpty()) {
+//        throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+//    }
+
+        if(start > meetings.size())
+            return new PageImpl<>(new ArrayList<>(), pageable, meetings.size());
+
+        return new PageImpl<>(meetings.subList(start, end), pageable, meetings.size());
+    }
+
+
+    //미팅 기간 + 회의실 종류에 따라 조회 (캘린더)
+    public List<CalendarMeetingDto> findMeetingCalendar(LocalDateTime start, LocalDateTime end, long meetingRoomId){
+        List<CalendarMeetingDto> calendarMeetings =
+                meetingRepository.findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(start, end, meetingRoomId).stream()
+                                .map(meeting -> CalendarMeetingDto.builder()
+                                        .meetingRoomId(meeting.getMeetingRoom().getId())
+                                        .start(meeting.getStart())
+                                        .end(meeting.getEnd())
+                                        .type(meeting.getMeetingType().toString())
+                                        .name(meeting.getName())
+                                        .build()).collect(Collectors.toList());
+//        meetingRepository.findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(start,end,id).forEach(calendarMeetings::add);
+        if (calendarMeetings.isEmpty()) {
+            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+        }
+        return calendarMeetings;
+    }
 
 }
