@@ -12,6 +12,7 @@ public enum StatusEnum {
 
     //200 OK : 요청 성공
     OK(HttpStatus.OK, "로그인 성공"),
+    Logout_OK(HttpStatus.OK,"로그아웃 성공"),
     SESSION_OK(HttpStatus.OK, "세션조회 성공"),
 
     MEETING_ALL_OK(HttpStatus.OK,"모든 미팅 조회 성공"),
@@ -23,7 +24,7 @@ public enum StatusEnum {
 
     // 400 BAD_REQUEST: 잘못된 요청
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
-    BAD_REQUEST_Session_DOES_NOT_EXIST(HttpStatus.BAD_REQUEST, "잘못된 요청 - 세션정보가 없습니다."),
+  /*  BAD_REQUEST_Session_DOES_NOT_EXIST(HttpStatus.BAD_REQUEST, "브라우저에서 받은 세션이 없습니다."),*/
 
 
 

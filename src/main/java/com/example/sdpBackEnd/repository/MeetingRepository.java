@@ -1,6 +1,7 @@
 package com.example.sdpBackEnd.repository;
 
 import com.example.sdpBackEnd.entity.Meeting;
+import com.example.sdpBackEnd.entity.MeetingMember;
 import com.example.sdpBackEnd.entity.MeetingRoom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,10 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     List<Meeting> findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(LocalDateTime start, LocalDateTime end, long id);
 
     List<Meeting> findByMeetingRoom(MeetingRoom meetingRoom);
+
+    Optional<Meeting> findById(Long id);
+
+
 
 
 }

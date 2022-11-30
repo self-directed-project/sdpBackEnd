@@ -20,16 +20,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.*;
 
 import static com.example.sdpBackEnd.excetion.StatusEnum.*;
 
 @RestController
-@RequestMapping("/meeting")
 @RequiredArgsConstructor
+@RequestMapping("/meeting")
 public class MeetingController {
     @Autowired
     private final MeetingService meetingService;
@@ -37,17 +39,8 @@ public class MeetingController {
 
     private final SessionManager sessionManager;
 
-    //미팅 전체 조회
-//    @GetMapping("/all")
-//    public ResponseEntity<MeetingResponseDto> findAllMeetings(HttpServletRequest request){
-//
-//        sessionManager.CheckSession(request);
-//
-//        List<Meeting> meetings = meetingService.findAllMeetings();
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(new MeetingResponseDto(MEETING_ALL_OK,meetings));
-//    }
+
+
 
     // 미팅 전체 조회 페이징 처리 (?page=0&size=4)
     @GetMapping("/all")
@@ -75,9 +68,24 @@ public class MeetingController {
         if (p_MyMeetings.isEmpty()){
             throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
         }
+ 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new MeetingMemberResponseDto(MEETING_My_OK,p_MyMeetings));
+    }
+
+
+    //전체미팅&나의미팅 - 상세페이지 조회
+    @GetMapping("/detailPage")
+    public  ResponseEntity<MeetingDetailRequestDto> viewDetailPage(@RequestParam Long meetingId) {
+
+        Map<String, List<String>> detail = meetingMemberService.viewdatailmeeting(meetingId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new MeetingDetailRequestDto(MEETING_My_OK,detail));
+
+ 
     }
 
 

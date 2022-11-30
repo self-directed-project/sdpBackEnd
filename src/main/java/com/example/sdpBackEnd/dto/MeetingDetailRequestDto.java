@@ -1,27 +1,26 @@
 package com.example.sdpBackEnd.dto;
 
-import com.example.sdpBackEnd.entity.Meeting;
 import com.example.sdpBackEnd.excetion.StatusEnum;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+import java.util.Map;
 @Getter
-public class MeetingMemberResponseDto {
-
+public class MeetingDetailRequestDto {
     private final LocalDateTime timestamp = LocalDateTime.now();
     private final int status;
     private final String code;
     private final String message;
-    private final Page<MeetingMemberDto> p_MyMeetings;
+    private final Map<String, List<String>> detail;
 
 
-    public MeetingMemberResponseDto(StatusEnum statusEnum, Page<MeetingMemberDto> p_MyMeetings) {
+
+    public MeetingDetailRequestDto(StatusEnum statusEnum, Map<String, List<String>> detail) {
         this.status = statusEnum.getStatus().value();
         this.code = statusEnum.name();
         this.message = statusEnum.getMessage();
-        this.p_MyMeetings = p_MyMeetings;
+        this.detail = detail;
     }
 }

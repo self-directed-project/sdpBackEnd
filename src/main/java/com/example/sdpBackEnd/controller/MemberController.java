@@ -12,11 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.example.sdpBackEnd.excetion.StatusEnum.OK;
-import static com.example.sdpBackEnd.excetion.StatusEnum.SESSION_OK;
+import static com.example.sdpBackEnd.excetion.StatusEnum.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,27 +35,28 @@ public class MemberController {
             throw new CustomException(StatusEnum.BAD_REQUEST);
         }
 
-        Member member= memberService.login(memberRequestDto);
+        Member member = memberService.login(memberRequestDto);
 
-        //로그인 성공 시
-        sessionManager.createSession(request,member);
+        //로그인 성공 시 - 세션 발급
+        sessionManager.createSession(request, member);
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(new MemberResponseDto(OK));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new MemberResponseDto(OK));
 
     }
 
-    @GetMapping("/main")
+    //로그아웃
+    @GetMapping("/logout")
     public ResponseEntity<MemberResponseDto> logincheck(HttpServletRequest request) {
 
 
-        //세션조회
-        sessionManager.CheckSession(request);
+        //로그아웃 성공 시 - 세션 기간 만료설정
+        sessionManager.Logout(request);
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(new MemberResponseDto(SESSION_OK));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new MemberResponseDto(Logout_OK));
 
     }
 }

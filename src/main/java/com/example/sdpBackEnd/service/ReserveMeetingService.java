@@ -93,7 +93,7 @@ public class ReserveMeetingService {
         LocalDateTime start = reserveDto.getStart();
         LocalDateTime end = reserveDto.getEnd();
 
-        if(end.isAfter(start))
+        if(end.isBefore(start))
             return false;
         else
             return true;
