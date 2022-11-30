@@ -93,7 +93,9 @@ public class MeetingController {
     @PostMapping("/calendar")
     public ResponseEntity<CalendarMeetingResponseDto> findMeetingsCalendar(HttpServletRequest request, @RequestBody CalendarMeetingDto calendarMeetingDto){
         sessionManager.CheckSession(request);
-        List<CalendarMeetingDto> calendarMeetings = meetingService.findMeetingCalendar(calendarMeetingDto.getStart(),calendarMeetingDto.getEnd(),calendarMeetingDto.getMeetingRoomId());
+        System.out.println("값확인: "+ calendarMeetingDto);
+
+        List<CalendarMeetingDto> calendarMeetings = meetingService.findMeetingCalendar(calendarMeetingDto);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
