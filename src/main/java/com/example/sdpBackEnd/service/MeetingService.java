@@ -74,9 +74,9 @@ public class MeetingService {
 
 
     //미팅 기간 + 회의실 종류에 따라 조회 (캘린더)
-    public List<CalendarMeetingDto> findMeetingCalendar(LocalDateTime start, LocalDateTime end, long meetingRoomId){
+    public List<CalendarMeetingDto> findMeetingCalendar(CalendarMeetingDto calendarMeetingDto){
         List<CalendarMeetingDto> calendarMeetings =
-                meetingRepository.findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(start, end, meetingRoomId).stream()
+                meetingRepository.findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(calendarMeetingDto.getStart(), calendarMeetingDto.getEnd(), calendarMeetingDto.getMeetingRoomId()).stream()
                                 .map(meeting -> CalendarMeetingDto.builder()
                                         .meetingRoomId(meeting.getMeetingRoom().getId())
                                         .start(meeting.getStart())
@@ -84,7 +84,6 @@ public class MeetingService {
                                         .type(meeting.getMeetingType().toString())
                                         .name(meeting.getName())
                                         .build()).collect(Collectors.toList());
-//        meetingRepository.findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(start,end,id).forEach(calendarMeetings::add);
         if (calendarMeetings.isEmpty()) {
             throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
         }
