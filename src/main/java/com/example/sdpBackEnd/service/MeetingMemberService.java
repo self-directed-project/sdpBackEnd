@@ -33,28 +33,28 @@ public class MeetingMemberService {
     private final MeetingRoomRepository meetingRoomRepository;
     private final MeetingRepository meetingRepository;
 
-    //나의예약 조회
-    public List<MeetingMemberDto> findMyMeeting(Long memberId) {
 
-        List<MeetingMemberDto> meetings =
-                meetingMemberRepository.findMeetingMemberByMemberId(memberId).stream()
-                        .map(meetingmember -> MeetingMemberDto.builder()
-                                .meetingId(meetingmember.getMeeting().getId())
-                                .name(meetingmember.getMeeting().getName())
-                                .start(meetingmember.getMeeting().getStart())
-                                .end(meetingmember.getMeeting().getEnd())
-                                .meetingRoomId(meetingmember.getMeeting().getMeetingRoom().getId())
-                                .meetingRoomName(meetingRoomRepository.findById(meetingmember.getMeeting().getMeetingRoom().getId()).get().getName())
-                                .createdBy(memberRepository.findById(meetingmember.getMeeting().getCreatedBy()).get().getName())
-                                .type(meetingmember.getMeeting().getMeetingType().toString())
-                                .build()
-                        ).sorted(Comparator.comparing(MeetingMemberDto::getStart).reversed())
-                        .collect(Collectors.toList());
+    //나의 미팅 조회 리스트로 받아오기
+    public List<MeetingMemberDto>findMyMeeting(Long memberId){
+        List<MeetingMemberDto> myMeetings =
+        meetingMemberRepository.findMeetingMemberByMemberId(memberId).stream()
+                .map(meetingmember-> MeetingMemberDto.builder()
+                        .meetingId(meetingmember.getMeeting().getId())
+                        .name(meetingmember.getMeeting().getName())
+                        .start(meetingmember.getMeeting().getStart())
+                        .end(meetingmember.getMeeting().getEnd())
+                        .meetingRoomId(meetingmember.getMeeting().getMeetingRoom().getId())
+                        .meetingRoomName(meetingRoomRepository.findById(meetingmember.getMeeting().getMeetingRoom().getId()).get().getName())
+                        .createdBy(memberRepository.findById(meetingmember.getMeeting().getCreatedBy()).get().getName())
+                        .type(meetingmember.getMeeting().getMeetingType().toString())
+                        .build()
+                ).sorted(Comparator.comparing(MeetingMemberDto::getStart).reversed())
+                .collect(Collectors.toList());
 
-        if (meetings.isEmpty()) {
-            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
-        }
-        return meetings;
+//        if (myMeetings.isEmpty()) {
+//            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+//        }
+        return myMeetings;
     }
 
     //나의 미팅 조회 (페이징처리)
@@ -67,6 +67,7 @@ public class MeetingMemberService {
 
         return new PageImpl<>(myMeetings.subList(start, end), pageable, myMeetings.size());
     }
+
 
     public Map<String, List<String>> viewdatailmeeting(long meetingId) {
 

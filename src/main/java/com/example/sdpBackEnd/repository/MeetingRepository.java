@@ -21,7 +21,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     //List<Meeting> findAll();
 
     //start 순서별 미팅 전체 조회 (페이징처리)
-    Page<Meeting> findAllByOrderByStartDesc(Pageable pageable);
+    List<Meeting> findAllByOrderByStartDesc();
 
     //미팅 기간 + 회의실 종류에 따라 조회 (캘린더)
     List<Meeting> findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(LocalDateTime start, LocalDateTime end, long id);

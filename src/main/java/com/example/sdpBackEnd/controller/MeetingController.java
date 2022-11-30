@@ -7,6 +7,7 @@ import com.example.sdpBackEnd.dto.MeetingResponseDto;
 import com.example.sdpBackEnd.dto.MeetingSearchDto;
 import com.example.sdpBackEnd.dto.*;
 import com.example.sdpBackEnd.entity.Meeting;
+import com.example.sdpBackEnd.entity.MeetingMember;
 import com.example.sdpBackEnd.excetion.CustomException;
 import com.example.sdpBackEnd.excetion.StatusEnum;
 import com.example.sdpBackEnd.service.MeetingMemberService;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
-import static com.example.sdpBackEnd.excetion.StatusEnum.MEETING_ALL_OK;
-import static com.example.sdpBackEnd.excetion.StatusEnum.MEETING_My_OK;
+import static com.example.sdpBackEnd.excetion.StatusEnum.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,14 +42,19 @@ public class MeetingController {
 
 
 
-    // 미팅 전체 조회 페이징 처리
+    // 미팅 전체 조회 페이징 처리 (?page=0&size=4)
     @GetMapping("/all")
     public ResponseEntity<MeetingResponseDto> _findAllMeetings(HttpServletRequest request, @PageableDefault(size=4) Pageable pageable){
         sessionManager.CheckSession(request);
-        Page<MeetingMemberDto> meetings = meetingService.findAll(pageable);
+        List<MeetingMemberDto> meetings = meetingService.findAll();
+        System.out.println(meetings);
+        Page<MeetingMemberDto> p_Meetings = meetingService.p_FindAll(meetings,pageable);
+        if (p_Meetings.isEmpty()){
+            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new MeetingResponseDto(MEETING_ALL_OK,meetings));
+                .body(new MeetingResponseDto(MEETING_ALL_OK, p_Meetings));
     }
 
     //나의 미팅조회
@@ -62,6 +68,7 @@ public class MeetingController {
         if (p_MyMeetings.isEmpty()){
             throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
         }
+ 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new MeetingMemberResponseDto(MEETING_My_OK,p_MyMeetings));
@@ -78,15 +85,26 @@ public class MeetingController {
                 .status(HttpStatus.OK)
                 .body(new MeetingDetailRequestDto(MEETING_My_OK,detail));
 
-
+ 
     }
 
 
     //미팅 기간 + 회의실 종류에 따라 조회 (캘린더)
-    @PostMapping("/room")
-    public List<Meeting> findAllMeetingsRoom(@RequestBody MeetingSearchDto meetingSearchDto ){
-        List<Meeting> meetings = meetingService.findMeetingInRoom(meetingSearchDto.getStart(), meetingSearchDto.getEnd(), meetingSearchDto.getId());
-        return meetings;
+    @PostMapping("/calendar")
+    public ResponseEntity<CalendarMeetingResponseDto> findMeetingsCalendar(HttpServletRequest request, @RequestBody CalendarMeetingDto calendarMeetingDto){
+        sessionManager.CheckSession(request);
+        List<CalendarMeetingDto> calendarMeetings = meetingService.findMeetingCalendar(calendarMeetingDto.getStart(),calendarMeetingDto.getEnd(),calendarMeetingDto.getMeetingRoomId());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CalendarMeetingResponseDto(MEETING_Calendar_OK,calendarMeetings));
     }
+
+//    public List<Meeting> findAllMeetingsRoom(@RequestBody MeetingSearchDto meetingSearchDto ){
+//        sessionManager.CheckSession(request);
+//        List<Meeting> meetings = meetingService.findMeetingInRoom(meetingSearchDto.getStart(), meetingSearchDto.getEnd(), meetingSearchDto.getId());
+//        return meetings;
+//    }
+
 
 }
