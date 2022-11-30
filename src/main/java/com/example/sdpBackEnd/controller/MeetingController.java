@@ -100,11 +100,11 @@ public class MeetingController {
                 .body(new CalendarMeetingResponseDto(MEETING_Calendar_OK,calendarMeetings));
     }
 
+
 //    public List<Meeting> findAllMeetingsRoom(@RequestBody MeetingSearchDto meetingSearchDto ){
 //        sessionManager.CheckSession(request);
 //        List<Meeting> meetings = meetingService.findMeetingInRoom(meetingSearchDto.getStart(), meetingSearchDto.getEnd(), meetingSearchDto.getId());
 //        return meetings;
 //    }
-
 
 }

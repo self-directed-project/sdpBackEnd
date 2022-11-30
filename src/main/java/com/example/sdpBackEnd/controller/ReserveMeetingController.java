@@ -1,9 +1,6 @@
 package com.example.sdpBackEnd.controller;
 
-import com.example.sdpBackEnd.dto.MeetingRoomDto;
-import com.example.sdpBackEnd.dto.MeetingRoomFavDto;
-import com.example.sdpBackEnd.dto.ReserveDto;
-import com.example.sdpBackEnd.dto.SearchMemberDto;
+import com.example.sdpBackEnd.dto.*;
 import com.example.sdpBackEnd.entity.MeetingType;
 import com.example.sdpBackEnd.entity.Member;
 import com.example.sdpBackEnd.service.ReserveMeetingService;
@@ -18,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@RequestMapping("/meeting/reserve")
+@RequestMapping("/meeting")
 @RestController
 public class ReserveMeetingController {
 
@@ -26,7 +23,7 @@ public class ReserveMeetingController {
     private final SessionManager sessionManager;
 
     //회의 예약
-    @PostMapping
+    @PostMapping("/reserve")
     public ResponseEntity<ReserveDto> reserve(@RequestBody ReserveDto reserveDto){
 
         System.out.println(reserveDto.getName()+"\n"+reserveDto.getDescription()+"\n"+reserveDto.getStart()+"\n"+reserveDto.getEnd()+"\n"+reserveDto.getType()+"\n"+reserveDto.getMeetingRoomId()+"\n"+reserveDto.getMembersId());
@@ -37,7 +34,7 @@ public class ReserveMeetingController {
     }
 
     //예약버튼 누를 시 회의실과 미팅타입 초기값 전달
-    @GetMapping
+    @GetMapping("/reserve")
     public ResponseEntity<Map<String, Object>> meetingRoomAndType(){
 
         Map<String, Object> result = new HashMap<>();
@@ -55,7 +52,7 @@ public class ReserveMeetingController {
     }
 
     //이름 검색시 이름 포함하는 리스트 전달
-    @GetMapping("/search")
+    @GetMapping("/reserve/search")
     public ResponseEntity<List<SearchMemberDto>> searchMember(@RequestParam String name){
         List<SearchMemberDto> searchList = reserveMeetingService.searchMember(name);
 
@@ -64,12 +61,50 @@ public class ReserveMeetingController {
 
     //회의 삭제
     @PostMapping("/delete")
-    public ResponseEntity<List<Long>> deleteMeeting(HttpServletRequest request, @RequestBody List<Long> meetingsId){
+    public ResponseEntity<List<DeleteMeetingDto>> deleteMeeting(HttpServletRequest request, @RequestBody DeleteMeetingDto deleteMeetingDto){
 
         long id = sessionManager.CheckSession(request);
 
-        reserveMeetingService.deleteMeetingList(id, meetingsId);
+        reserveMeetingService.deleteMeetingList(id, deleteMeetingDto.getMeetingsId());
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updateMeeting(HttpServletRequest request, @RequestBody UpdateDto updateDto){
+
+        long memberId = sessionManager.CheckSession(request);
+
+        long meetingId = updateDto.getId();
+
+        ReserveDto reserveDto = ReserveDto.builder()
+                .meetingRoomId(updateDto.getMeetingRoomId())
+                .name(updateDto.getName())
+                .start(updateDto.getStart())
+                .end(updateDto.getEnd())
+                .description(updateDto.getDescription())
+                .type(updateDto.getType())
+                .membersId(updateDto.getMembersId())
+                .build();
+
+        reserveMeetingService.updateMeeting(memberId, meetingId, reserveDto);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/update")
+    public ResponseEntity<?> giveMeeting(HttpServletRequest request, @RequestParam long meetingId){
+
+        long memberId = sessionManager.CheckSession(request);
+
+        Map<String, Object> result = new HashMap<>();
+
+        List<SearchMemberDto> members = reserveMeetingService.updateSearchMember(meetingId);
+        UpdateMeetingDto meeting = reserveMeetingService.updateSearchMeeting(memberId, meetingId);
+
+        result.put("meeting", meeting);
+        result.put("members", members);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
