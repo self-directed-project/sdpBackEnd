@@ -5,6 +5,8 @@ import com.example.sdpBackEnd.dto.ReserveDto;
 import com.example.sdpBackEnd.dto.SearchMemberDto;
 import com.example.sdpBackEnd.dto.UpdateMeetingDto;
 import com.example.sdpBackEnd.entity.*;
+import com.example.sdpBackEnd.excetion.CustomException;
+import com.example.sdpBackEnd.excetion.StatusEnum;
 import com.example.sdpBackEnd.repository.MeetingMemberRepository;
 import com.example.sdpBackEnd.repository.MeetingRepository;
 import com.example.sdpBackEnd.repository.MeetingRoomRepository;
@@ -33,10 +35,10 @@ public class ReserveMeetingService {
     @Transactional
     public void makeMeeting(ReserveDto reserveDto){
         if(!checkStart(reserveDto)){
-            throw new RuntimeException("끝나는 시간이 시작 시간보다 빠릅니다.");
+            throw new CustomException(StatusEnum.BAD_REQUEST_RESERVE_TIME);
         }
         else if(!checkTime(reserveDto)){
-            throw new RuntimeException("다른 회의 시간과 중복됩니다.");
+            throw new CustomException(StatusEnum.BAD_REQUEST_OVERLAP_TIME);
         }
         else{
             Meeting meeting = Meeting.builder()
@@ -151,7 +153,7 @@ public class ReserveMeetingService {
                 meetingMemberRepository.deleteById(meetingMembers.get(i).getId());
             }
             else{
-                throw new IllegalArgumentException("삭제 권한이 없습니다.");
+                throw new CustomException(StatusEnum.DELETE_FORBIDDEN);
             }
         }
 
@@ -160,7 +162,7 @@ public class ReserveMeetingService {
                 meetingRepository.deleteById(meetingList.get(i).getId());
             }
             else{
-                throw new IllegalArgumentException("삭제 권한이 없습니다.");
+                throw new CustomException(StatusEnum.DELETE_FORBIDDEN);
             }
         }
     }
@@ -176,7 +178,7 @@ public class ReserveMeetingService {
                 meetingRepository.delete(meetingList.get());
             }
             else{
-                throw new IllegalArgumentException("삭제 권한이 없습니다.");
+                throw new CustomException(StatusEnum.DELETE_FORBIDDEN);
             }
         }
     }
@@ -188,13 +190,13 @@ public class ReserveMeetingService {
         Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(()-> new IllegalArgumentException("회의가 없습니다."));
 
         if(meeting.getCreatedBy()!=memberId){
-            throw new RuntimeException("수정 권한이 없습니다.");
+            throw new CustomException(StatusEnum.UPDATE_FORBIDDEN);
         }
         else if(!checkStart(reserveDto)){
-            throw new RuntimeException("끝나는 시간이 시작 시간보다 빠릅니다.");
+            throw new CustomException(StatusEnum.BAD_REQUEST_RESERVE_TIME);
         }
         else if(!checkTime(reserveDto)){
-            throw new RuntimeException("다른 회의 시간과 중복됩니다.");
+            throw new CustomException(StatusEnum.BAD_REQUEST_OVERLAP_TIME);
         }
         else{
             List<MeetingMember> meetingMembers = meetingMemberRepository.findByMeetingId(meeting.getId());
@@ -248,7 +250,7 @@ public class ReserveMeetingService {
         Meeting meeting = meetingRepository.findById(meetingId).get();
 
         if(meeting.getCreatedBy() != memberId)
-            throw new RuntimeException("수정 권한이 없습니다.");
+            throw new CustomException(StatusEnum.UPDATE_FORBIDDEN);
         else{
             UpdateMeetingDto updateMeetingDto = UpdateMeetingDto.builder()
                     .id(meeting.getId())

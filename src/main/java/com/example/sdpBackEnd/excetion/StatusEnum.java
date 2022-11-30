@@ -25,6 +25,14 @@ public enum StatusEnum {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     BAD_REQUEST_Session_DOES_NOT_EXIST(HttpStatus.BAD_REQUEST, "잘못된 요청 - 세션정보가 없습니다."),
 
+    BAD_REQUEST_RESERVE_TIME(HttpStatus.BAD_REQUEST, "끝나는 시간이 시작 시간보다 빠릅니다."),
+
+    BAD_REQUEST_OVERLAP_TIME(HttpStatus.BAD_REQUEST, "다른 회의 시간과 중복됩니다."),
+
+    // 403 Forbidden : 콘텐츠에 접근할 권리가 없음
+    DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "삭제 권한이 없습니다."),
+
+    UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "수정 권한이 없습니다."),
 
 
     // 404 NOT_FOUND: 리소스를 찾을 수 없음
