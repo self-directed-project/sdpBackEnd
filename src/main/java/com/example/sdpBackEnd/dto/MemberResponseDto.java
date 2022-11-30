@@ -14,7 +14,6 @@ public class MemberResponseDto {
     private final String code;
     private final String message;
 
-  /*  private  String name;*/
 
     public MemberResponseDto(StatusEnum statusEnum) {
         this.status = statusEnum.getStatus().value();
@@ -23,11 +22,4 @@ public class MemberResponseDto {
 
     }
 
- /*   public MemberResponseDto(StatusEnum statusEnum, Member member) {
-        this.status = statusEnum.getStatus().value();
-        this.code = statusEnum.name();
-        this.message = statusEnum.getMessage();
-        this.name=member.getName();
-    }
-*/
 }
