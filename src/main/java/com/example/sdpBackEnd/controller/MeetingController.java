@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static com.example.sdpBackEnd.excetion.StatusEnum.MEETING_ALL_OK;
-import static com.example.sdpBackEnd.excetion.StatusEnum.MEETING_My_OK;
+import static com.example.sdpBackEnd.excetion.StatusEnum.*;
 
 @RestController
 @RequestMapping("/meeting")
@@ -82,10 +82,21 @@ public class MeetingController {
 
 
     //미팅 기간 + 회의실 종류에 따라 조회 (캘린더)
-    @PostMapping("/room")
-    public List<Meeting> findAllMeetingsRoom(@RequestBody MeetingSearchDto meetingSearchDto ){
-        List<Meeting> meetings = meetingService.findMeetingInRoom(meetingSearchDto.getStart(), meetingSearchDto.getEnd(), meetingSearchDto.getId());
-        return meetings;
+    @PostMapping("/calendar")
+    public ResponseEntity<CalendarMeetingResponseDto> findMeetingsCalendar(HttpServletRequest request, @RequestBody CalendarMeetingDto calendarMeetingDto){
+        sessionManager.CheckSession(request);
+        List<CalendarMeetingDto> calendarMeetings = meetingService.findMeetingCalendar(calendarMeetingDto.getStart(),calendarMeetingDto.getEnd(),calendarMeetingDto.getMeetingRoomId());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CalendarMeetingResponseDto(MEETING_Calendar_OK,calendarMeetings));
     }
+
+//    public List<Meeting> findAllMeetingsRoom(@RequestBody MeetingSearchDto meetingSearchDto ){
+//        sessionManager.CheckSession(request);
+//        List<Meeting> meetings = meetingService.findMeetingInRoom(meetingSearchDto.getStart(), meetingSearchDto.getEnd(), meetingSearchDto.getId());
+//        return meetings;
+//    }
+
 
 }

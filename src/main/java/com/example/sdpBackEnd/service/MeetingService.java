@@ -1,5 +1,6 @@
 package com.example.sdpBackEnd.service;
 
+import com.example.sdpBackEnd.dto.CalendarMeetingDto;
 import com.example.sdpBackEnd.dto.MeetingMemberDto;
 import com.example.sdpBackEnd.entity.Meeting;
 import com.example.sdpBackEnd.excetion.CustomException;
@@ -73,12 +74,21 @@ public class MeetingService {
 
 
     //미팅 기간 + 회의실 종류에 따라 조회 (캘린더)
-    public List<Meeting> findMeetingInRoom(LocalDateTime start, LocalDateTime end, long id){
-        List<Meeting> meetings = new ArrayList<>();
-        meetingRepository.findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(start,end,id).forEach(meetings::add);
-        return meetings;
+    public List<CalendarMeetingDto> findMeetingCalendar(LocalDateTime start, LocalDateTime end, long meetingRoomId){
+        List<CalendarMeetingDto> calendarMeetings =
+                meetingRepository.findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(start, end, meetingRoomId).stream()
+                                .map(meeting -> CalendarMeetingDto.builder()
+                                        .meetingRoomId(meeting.getMeetingRoom().getId())
+                                        .start(meeting.getStart())
+                                        .end(meeting.getEnd())
+                                        .type(meeting.getMeetingType().toString())
+                                        .name(meeting.getName())
+                                        .build()).collect(Collectors.toList());
+//        meetingRepository.findAllByStartGreaterThanEqualAndEndLessThanEqualAndMeetingRoomIdEquals(start,end,id).forEach(calendarMeetings::add);
+        if (calendarMeetings.isEmpty()) {
+            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
+        }
+        return calendarMeetings;
     }
-
-
 
 }

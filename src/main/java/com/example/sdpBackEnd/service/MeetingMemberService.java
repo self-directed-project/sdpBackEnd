@@ -43,7 +43,8 @@ public class MeetingMemberService {
                         .createdBy(memberRepository.findById(meetingmember.getMeeting().getCreatedBy()).get().getName())
                         .type(meetingmember.getMeeting().getMeetingType().toString())
                         .build()
-                ).collect(Collectors.toList());
+                ).sorted(Comparator.comparing(MeetingMemberDto::getStart).reversed())
+                .collect(Collectors.toList());
 
 //        if (myMeetings.isEmpty()) {
 //            throw new CustomException(StatusEnum.MEETING_DOES_NOT_EXIST);
